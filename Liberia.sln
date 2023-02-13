@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Liberia", "Liberia\Liberia.csproj", "{A4227F79-15DC-4270-A294-0F6CB20A6131}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Liberia", "Liberia\Liberia.csproj", "{A4227F79-15DC-4270-A294-0F6CB20A6131}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{798FE2BB-B20F-472C-ACA4-23F6596C41A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{A4227F79-15DC-4270-A294-0F6CB20A6131}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4227F79-15DC-4270-A294-0F6CB20A6131}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A4227F79-15DC-4270-A294-0F6CB20A6131}.Release|Any CPU.Build.0 = Release|Any CPU
+		{798FE2BB-B20F-472C-ACA4-23F6596C41A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{798FE2BB-B20F-472C-ACA4-23F6596C41A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{798FE2BB-B20F-472C-ACA4-23F6596C41A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{798FE2BB-B20F-472C-ACA4-23F6596C41A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,4 +1,4 @@
-namespace Liberia.ViewModels
+namespace DAL.ViewModels
 {
     public class ErrorViewModel
     {

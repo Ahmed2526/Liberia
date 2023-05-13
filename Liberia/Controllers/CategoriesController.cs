@@ -16,6 +16,11 @@ namespace Liberia.Controllers
             return View(categories);
         }
 
+        //[HttpGet]
+        //public IActionResult Create()
+        //{
+
+        //}
 
 
     }

@@ -1,13 +1,53 @@
 ﻿@model IEnumerable<Category>
+@{
+    ViewData["Title"] = "Categories";
+}
+
+<div class="card card-custom">
+    <div class="card-header">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-chat-1 text-primary"></i>
+            </span>
+            <h3 class="card-label">
+                   Categories
+            </h3>
+        </div>
+        <div class="card-toolbar">
+            <a asp-controller="Categories" asp-action="Create" class="btn btn-md btn-primary font-weight-bold">
+                <i class="bi bi-plus-circle me-1"></i>Add
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-warning pb-2" role="alert">
+                <h4 class="pt-1"> No Category Found!</h4>
+            </div>
+        }
+        else
+        {
+            @foreach (var item in Model)
+            {
+                <p>@item.Id</p>
+                <p>@item.Name</p>
+                <p>@item.IsActive</p>
+                <p>@item.CreatedOn</p>
+                <p>@item.ModifiedOn</p>
+            }
+            
+        }
+    </div>
+    <div class="card-footer d-flex justify-content-between">
+        <a href="#" class="btn btn-light-primary font-weight-bold">Manage</a>
+        <a href="#" class="btn btn-outline-secondary font-weight-bold">Learn more</a>
+    </div>
+</div>
 
 
-<h1>Categories</h1>
 
 
-@foreach (var item in Model)
-{
-    <p>@item.</p>
-}    
 
 
 

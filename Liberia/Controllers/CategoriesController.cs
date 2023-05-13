@@ -12,16 +12,47 @@ namespace Liberia.Controllers
         public IActionResult Index()
         {
             //TODO: use ViewModel
-            var categories = _context.Categories.ToList();
+            var categories = _context.Categories.Where(e => e.IsActive == true)
+                .ToList();
             return View(categories);
         }
 
-        //[HttpGet]
-        //public IActionResult Create()
-        //{
+        public IActionResult Create()
+        {
+            return View();
+        }
 
-        //}
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Create(CategoryVM vm)
+        {
+            if (!ModelState.IsValid)
+                return View(vm);
 
+            var category = new Category
+            {
+                Name = vm.Name,
+                IsActive = true
+            };
+            _context.Add(category);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var Selected = _context.Categories.Find(id);
+            if (Selected is null)
+                return NotFound();
+
+            _context.Remove(Selected);
+            _context.SaveChanges();
+            return RedirectToAction(nameof(Index));
+        }
+
+
+        
 
     }
 }

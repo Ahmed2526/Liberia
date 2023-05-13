@@ -9,9 +9,7 @@
             <span class="card-icon">
                 <i class="flaticon2-chat-1 text-primary"></i>
             </span>
-            <h3 class="card-label">
-                   Categories
-            </h3>
+            <h3 class="card-label">Categories</h3>
         </div>
         <div class="card-toolbar">
             <a asp-controller="Categories" asp-action="Create" class="btn btn-md btn-primary font-weight-bold">
@@ -30,13 +28,37 @@
         {
             @foreach (var item in Model)
             {
-                <p>@item.Id</p>
-                <p>@item.Name</p>
-                <p>@item.IsActive</p>
-                <p>@item.CreatedOn</p>
-                <p>@item.ModifiedOn</p>
+                <table style="font-size:1.2rem;" class="table table-striped">
+                    <thead>
+                        <tr style="font-weight:600">
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">IsActive</th>
+                            <th scope="col">CreatedOn</th>
+                            <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>@item.Name</td>
+                            <td>@item.IsActive</td>
+                            <td>@item.CreatedOn</td>
+                            <td>
+                                <a asp-controller="Categories" asp-action="Edit" asp-route-id="@item.Id">
+                                    <i style="font-size:1.3rem" class="bi bi-pencil-square me-10"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a asp-controller="Categories" asp-action="Delete" asp-route-id="@item.Id">
+                                    <i style="font-size:1.3rem" class="bi bi-x-circle text-danger"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             }
-            
         }
     </div>
     <div class="card-footer d-flex justify-content-between">

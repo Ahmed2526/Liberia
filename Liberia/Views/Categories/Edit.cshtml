@@ -1,6 +1,6 @@
 ﻿@model CategoryVM
 @{
-    ViewData["Title"] = "Add Category";
+    ViewData["Title"] = "Edit Category";
 }
 
 <div class="card card-custom">
@@ -9,11 +9,11 @@
             <span class="card-icon">
                 <i class="flaticon2-chat-1 text-primary"></i>
             </span>
-            <h3 class="card-label">Add Category</h3>
+            <h3 class="card-label">Edit Category</h3>
         </div>
     </div>
     <div class="card-body">
-        <form method="post" asp-controller="Categories" asp-action="Create">
+        <form method="post" asp-controller="Categories" asp-action="Edit">
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <label asp-for="Name" class="form-label">Category Name</label>

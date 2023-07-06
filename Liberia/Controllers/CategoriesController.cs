@@ -1,4 +1,5 @@
 ﻿using Liberia.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Liberia.Controllers
 {
@@ -12,8 +13,7 @@ namespace Liberia.Controllers
         public IActionResult Index()
         {
             //TODO: use ViewModel
-            var categories = _context.Categories.Where(e => e.IsActive == true)
-                .ToList();
+            var categories = _context.Categories.AsNoTracking().ToList();
             return View(categories);
         }
 
@@ -40,19 +40,58 @@ namespace Liberia.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Edit(int id)
+        {
+            var select = _context.Categories.Find(id);
+            if (select is null)
+                return NotFound();
+
+            var vm = new CategoryVM()
+            {
+                Id = select.Id,
+                Name = select.Name
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(CategoryVM vm)
+        {
+            if (!ModelState.IsValid)
+                return View(vm);
+
+            var select = _context.Categories.Find(vm.Id);
+            if (select is null)
+                return NotFound();
+
+            select.IsActive = true;
+            select.Name = vm.Name;
+            select.ModifiedOn = DateTime.Now;
+
+            _context.Categories.Update(select);
+            _context.SaveChanges();
+
+            return RedirectToAction(nameof(Index));
+        }
+
         public IActionResult Delete(int id)
         {
             var Selected = _context.Categories.Find(id);
             if (Selected is null)
                 return NotFound();
 
-            _context.Remove(Selected);
+            if (Selected.IsActive)
+                Selected.IsActive = false;
+            else
+                Selected.IsActive = true;
+
             _context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
 
-        
+
 
     }
 }

@@ -87,25 +87,39 @@
                 let Category = $(this);
                 let Categoryid = $(this).data('id');
 
-                var result = confirm('Are You Sure You Want To do this?');
-
-                if (result){
-                    $.ajax({
-                        url: "/Categories/ToggleStatus",
-                        data: {
-                            id: Categoryid,
-                            '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                bootbox.confirm({
+                    message: 'Are You Sure You Want To do This ?',
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-danger'
                         },
-                        type: "POST",
-                        success: function (ModifiedOn) {
-                            var status = Category.parents('tr').find('.js-toggle-badge');
-                            var newStatus = status.text().trim() === 'Deleted' ? 'Available' : 'Deleted';
-                            status.text(newStatus).toggleClass('text-bg-success text-bg-danger');
-
-                            Category.parents('tr').find('.js-modified-on').html(ModifiedOn);
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-secondary'
                         }
-                    });
-                };
+                    },
+                    callback: function (result) {
+
+                        if (result) {
+                            $.ajax({
+                                url: "/Categories/ToggleStatus",
+                                data: {
+                                    id: Categoryid,
+                                    '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                                },
+                                type: "POST",
+                                success: function (ModifiedOn) {
+                                    var status = Category.parents('tr').find('.js-toggle-badge');
+                                    var newStatus = status.text().trim() === 'Deleted' ? 'Available' : 'Deleted';
+                                    status.text(newStatus).toggleClass('text-bg-success text-bg-danger');
+
+                                    Category.parents('tr').find('.js-modified-on').html(ModifiedOn);
+                                }
+                            });
+                        }
+                    }
+                });
             });
         });
     </script>

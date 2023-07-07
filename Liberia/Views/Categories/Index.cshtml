@@ -21,12 +21,11 @@
         @if (!Model.Any())
         {
             <div class="alert alert-warning pb-2" role="alert">
-                <h4 class="pt-1"> No Category Found!</h4>
+                <h4 class="pt-1">No Category Found!</h4>
             </div>
         }
         else
         {
-
             <table style="font-size:1.2rem;" class="table table-striped">
                 <thead>
                     <tr style="font-weight:600">
@@ -46,29 +45,21 @@
                             <td>@item.Id</td>
                             <td>@item.Name</td>
                             <td>
-                                <span class="badge rounded-pill text-bg-@(item.IsActive ? "success" : "danger")">
+                                <span class="badge rounded-pill text-bg-@(item.IsActive ? "success" : "danger") js-toggle-badge">
                                     @(item.IsActive ? "Available" : "Deleted")
                                 </span>
                             </td>
                             <td>@item.CreatedOn</td>
-                            <td>@item.ModifiedOn</td>
+                            <td class="js-modified-on">@item.ModifiedOn</td>
                             <td>
                                 <a asp-controller="Categories" asp-action="Edit" asp-route-id="@item.Id">
                                     <i style="font-size:1.3rem" class="bi bi-pencil-square "></i>
                                 </a>
                             </td>
                             <td>
-                                <a class="ms-2" asp-controller="Categories" asp-action="Delete" asp-route-id="@item.Id">
+                                <a class="ms-2 js-toggle-delete" href="javascript:;" data-id="@item.Id">
                                     <i style="font-size:1.3rem" class="bi bi-x-circle text-danger"></i>
                                 </a>
-
-                                @*<div class="form-check form-switch">
-                        <a class="ms-2" asp-controller="Categories" asp-action="Delete" asp-route-id="@item.Id">
-                        <input class="form-check-input" type="checkbox" @(item.IsActive ? "Checked" : "")>
-                        <i class="form-check-input" type="checkbox" @(item.IsActive ? "Checked" : "")></i>
-                        </a>
-                        </div>*@
-
                             </td>
                             <td>
                             </td>
@@ -84,6 +75,41 @@
         <a href="#" class="btn btn-outline-secondary font-weight-bold">Learn more</a>
     </div>
 </div>
+
+@Html.AntiForgeryToken()
+
+@section Scripts
+    {
+    <script>
+        $(document).ready(function () {
+            $('.js-toggle-delete').click(function () {
+
+                let Category = $(this);
+                let Categoryid = $(this).data('id');
+
+                var result = confirm('Are You Sure You Want To do this?');
+
+                if (result){
+                    $.ajax({
+                        url: "/Categories/ToggleStatus",
+                        data: {
+                            id: Categoryid,
+                            '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        type: "POST",
+                        success: function (ModifiedOn) {
+                            var status = Category.parents('tr').find('.js-toggle-badge');
+                            var newStatus = status.text().trim() === 'Deleted' ? 'Available' : 'Deleted';
+                            status.text(newStatus).toggleClass('text-bg-success text-bg-danger');
+
+                            Category.parents('tr').find('.js-modified-on').html(ModifiedOn);
+                        }
+                    });
+                };
+            });
+        });
+    </script>
+}
 
 
 

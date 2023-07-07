@@ -74,20 +74,19 @@ namespace Liberia.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
-        public IActionResult Delete(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult ToggleStatus(int id)
         {
             var Selected = _context.Categories.Find(id);
             if (Selected is null)
                 return NotFound();
 
-            if (Selected.IsActive)
-                Selected.IsActive = false;
-            else
-                Selected.IsActive = true;
-
+            Selected.IsActive = !Selected.IsActive;
+            Selected.ModifiedOn = DateTime.Now;
             _context.SaveChanges();
-            return RedirectToAction(nameof(Index));
+
+            return Ok(Selected.ModifiedOn.ToString());
         }
 
 

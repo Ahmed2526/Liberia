@@ -10,9 +10,10 @@
     <!--begin::Global Stylesheets Bundle(used by all pages)-->
     <link rel="stylesheet" href="~/assets/css/plugins.bundle.css" type="text/css" />
     <link rel="stylesheet" href="~/assets/css/style.bundle.css" type="text/css" />
+    <link rel="stylesheet" href="~/lib/animate.css/animate.css" />
     <!--end::Global Stylesheets Bundle-->
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Bookify.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed">
     <!--begin::Theme mode setup on page load-->
@@ -57,7 +58,7 @@
         <!--end::Svg Icon-->
     </div>
     <!--end::Scrolltop-->
-
+    <partial name="_Modal" />
     <script>var hostUrl = "assets/";</script>
     <!--begin::Global Javascript Bundle(used by all pages)-->
     <script src="~/assets/js/plugins.bundle.js"></script>
@@ -68,3 +69,5 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+

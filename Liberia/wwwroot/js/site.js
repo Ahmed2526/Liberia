@@ -1,4 +1,41 @@
-﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿$(document).ready(function () {
+    $('.js-modal').on('click', function () {
+        var modal = $('#Modal');
+        var title = $(this).data('title');
+        var btn = $(this);
+        $('#ModalLabel').text(title);
 
-// Write your JavaScript code.
+        $.ajax({
+            type: 'GET',
+            url: btn.data('url'),
+            success: function (form) {
+                $('.modal-body').html(form);
+                $.validator.unobtrusive.parse(modal);
+            },
+            error: function () {
+                showErrorMessage();
+            }
+        });
+        modal.modal('show');
+
+    });
+});
+function onModalSuccess() {
+    $('#Modal').modal('hide');
+    showSuccessMessage();
+}
+function showErrorMessage() {
+    Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Something went wrong!',
+    })
+}
+function showSuccessMessage() {
+    Swal.fire(
+        'Done!',
+        'Saved Successfully!',
+        'success'
+    )
+}
+

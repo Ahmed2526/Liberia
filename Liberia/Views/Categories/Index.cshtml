@@ -12,7 +12,7 @@
             <h3 class="card-label">Categories</h3>
         </div>
         <div class="card-toolbar">
-            <a asp-controller="Categories" asp-action="Create" class="btn btn-md btn-primary font-weight-bold">
+            <a href="javascript:;" class="btn btn-md btn-primary font-weight-bold js-modal" data-title="Add Category" data-url="/Categories/Create">
                 <i class="bi bi-plus-circle me-1"></i>Add
             </a>
         </div>
@@ -52,7 +52,7 @@
                             <td>@item.CreatedOn</td>
                             <td class="js-modified-on">@item.ModifiedOn</td>
                             <td>
-                                <a asp-controller="Categories" asp-action="Edit" asp-route-id="@item.Id">
+                                <a class="js-modal" href="javascript:;" data-title="Edit Category" data-url="/Categories/Edit/@item.Id">
                                     <i style="font-size:1.3rem" class="bi bi-pencil-square "></i>
                                 </a>
                             </td>
@@ -67,12 +67,7 @@
                     </tbody>
                 }
             </table>
-
         }
-    </div>
-    <div class="card-footer d-flex justify-content-between">
-        <a href="#" class="btn btn-light-primary font-weight-bold">Manage</a>
-        <a href="#" class="btn btn-outline-secondary font-weight-bold">Learn more</a>
     </div>
 </div>
 
@@ -80,6 +75,7 @@
 
 @section Scripts
     {
+    <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
             $('.js-toggle-delete').click(function () {
@@ -88,6 +84,7 @@
                 let Categoryid = $(this).data('id');
 
                 bootbox.confirm({
+                    title: 'Delete Category',
                     message: 'Are You Sure You Want To do This ?',
                     buttons: {
                         confirm: {
@@ -114,13 +111,21 @@
                                     var newStatus = status.text().trim() === 'Deleted' ? 'Available' : 'Deleted';
                                     status.text(newStatus).toggleClass('text-bg-success text-bg-danger');
 
+                                    Category.parents('tr').addClass("animate__animated ");
+                                    Category.parents('tr').toggleClass("animate__shakeX");
+
                                     Category.parents('tr').find('.js-modified-on').html(ModifiedOn);
+
+                                },
+                                error: function () {
+                                    showErrorMessage();
                                 }
                             });
                         }
                     }
                 });
             });
+
         });
     </script>
 }

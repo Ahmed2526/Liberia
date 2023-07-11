@@ -28,3 +28,35 @@ body {
 }
 
 /*End BootBox*/
+
+
+/*Start Sweet Alert*/
+
+.swal2-styled.swal2-confirm {
+    padding-right: 25px;
+    padding-left:25px;
+    font-size:1.2rem;
+}
+
+.swal2-popup .swal2-title {
+    font-size: 1.6rem !important;
+}
+
+.swal2-popup .swal2-content, .swal2-popup .swal2-html-container {
+    font-size: 1.5rem !important;
+}
+
+/*End Sweet Alert*/
+
+
+/*Start Modal Style*/
+
+/*.card .card-body {
+     padding: 0rem 0rem; 
+}
+
+.card-body {
+    padding: var(--bs-card-spacer-y) var(--bs-card-spacer-x);
+}
+*/
+/*End Modal Style*/

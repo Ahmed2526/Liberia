@@ -1,4 +1,5 @@
 ﻿using Liberia.Data;
+using Liberia.Filters;
 using Microsoft.EntityFrameworkCore;
 
 namespace Liberia.Controllers
@@ -16,10 +17,10 @@ namespace Liberia.Controllers
             var categories = _context.Categories.AsNoTracking().ToList();
             return View(categories);
         }
-
+        [AjaxFilters]
         public IActionResult Create()
         {
-            return View();
+            return PartialView("_Create");
         }
 
         [HttpPost]
@@ -27,7 +28,7 @@ namespace Liberia.Controllers
         public IActionResult Create(CategoryVM vm)
         {
             if (!ModelState.IsValid)
-                return View(vm);
+                return BadRequest();
 
             var category = new Category
             {
@@ -37,9 +38,9 @@ namespace Liberia.Controllers
             _context.Add(category);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
-
+        [AjaxFilters]
         public IActionResult Edit(int id)
         {
             var select = _context.Categories.Find(id);
@@ -51,7 +52,7 @@ namespace Liberia.Controllers
                 Id = select.Id,
                 Name = select.Name
             };
-            return View(vm);
+            return PartialView("_Edit", vm);
         }
 
         [HttpPost]
@@ -59,11 +60,12 @@ namespace Liberia.Controllers
         public IActionResult Edit(CategoryVM vm)
         {
             if (!ModelState.IsValid)
-                return View(vm);
+                return BadRequest();
 
             var select = _context.Categories.Find(vm.Id);
             if (select is null)
                 return NotFound();
+
 
             select.IsActive = true;
             select.Name = vm.Name;
@@ -72,7 +74,7 @@ namespace Liberia.Controllers
             _context.Categories.Update(select);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(Index));
+            return Ok();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]

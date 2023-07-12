@@ -17,7 +17,7 @@
             </a>
         </div>
     </div>
-    <div class="card-body">
+    <div class="card-body" id="DataTable_wrapper">
         @if (!Model.Any())
         {
             <div class="alert alert-warning pb-2" role="alert">
@@ -26,7 +26,7 @@
         }
         else
         {
-            <table style="font-size:1.2rem;" class="table table-striped">
+            <table style="font-size:1.2rem;" id="DataTable" class="table table-striped">
                 <thead>
                     <tr style="font-weight:600">
                         <th scope="col">#</th>
@@ -78,6 +78,19 @@
     <partial name="_ValidationScriptsPartial" />
     <script>
         $(document).ready(function () {
+
+            //StartDataTable//
+            $(document).ready(function () {
+                var table = $('#DataTable').DataTable({
+                    lengthChange: false,
+                    buttons: ['copy', 'excel', 'pdf', 'colvis']
+                });
+
+                table.buttons().container()
+                    .appendTo('#DataTable_wrapper .col-md-6:eq(0)');
+            });
+            //EndDataTable//
+
             $('.js-toggle-delete').click(function () {
 
                 let Category = $(this);

@@ -10,8 +10,8 @@ namespace DAL.ViewModels
     public class CategoryVM
     {
         public int Id { get; set; }
-        [Required,MaxLength(100)]
+        [Required, MaxLength(100)]
         [MinLength(3, ErrorMessage = "Minimum Length is 3 char")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
     }
 }

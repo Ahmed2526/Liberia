@@ -12,8 +12,9 @@
     <link rel="stylesheet" href="~/assets/css/style.bundle.css" type="text/css" />
     <link rel="stylesheet" href="~/lib/animate.css/animate.css" />
     <!--end::Global Stylesheets Bundle-->
-    <link rel="stylesheet" href="~/Bookify.Web.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("CustomStyles", required: false)
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Bookify.Web.styles.css" asp-append-version="true" />
 </head>
 <body id="kt_body" class="header-fixed header-tablet-and-mobile-fixed">
     <!--begin::Theme mode setup on page load-->
@@ -65,6 +66,7 @@
     <script src="~/assets/js/scripts.bundle.js"></script>
     <script src="~/lib/bootbox.js/bootbox.js"></script>
     <!--end::Global Javascript Bundle-->
+    @await RenderSectionAsync("CustomScripts", required: false)
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

@@ -11,12 +11,13 @@ namespace Liberia.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             //TODO: use ViewModel
-            var categories = _context.Categories.AsNoTracking().ToList();
+            var categories = await _context.Categories.AsNoTracking().ToListAsync();
             return View(categories);
         }
+        [HttpGet]
         [AjaxFilters]
         public IActionResult Create()
         {
@@ -25,7 +26,7 @@ namespace Liberia.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(CategoryVM vm)
+        public async Task<IActionResult> Create(CategoryVM vm)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
@@ -36,14 +37,15 @@ namespace Liberia.Controllers
                 IsActive = true
             };
             _context.Add(category);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
+        [HttpGet]
         [AjaxFilters]
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var select = _context.Categories.Find(id);
+            var select = await _context.Categories.FindAsync(id);
             if (select is null)
                 return NotFound();
 
@@ -57,36 +59,34 @@ namespace Liberia.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(CategoryVM vm)
+        public async Task<IActionResult> Edit(CategoryVM vm)
         {
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            var select = _context.Categories.Find(vm.Id);
+            var select = await _context.Categories.FindAsync(vm.Id);
             if (select is null)
                 return NotFound();
 
-
-            select.IsActive = true;
             select.Name = vm.Name;
             select.ModifiedOn = DateTime.Now;
 
             _context.Categories.Update(select);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult ToggleStatus(int id)
+        public async Task<IActionResult> ToggleStatus(int id)
         {
-            var Selected = _context.Categories.Find(id);
+            var Selected = await _context.Categories.FindAsync(id);
             if (Selected is null)
                 return NotFound();
 
             Selected.IsActive = !Selected.IsActive;
             Selected.ModifiedOn = DateTime.Now;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(Selected.ModifiedOn.ToString());
         }

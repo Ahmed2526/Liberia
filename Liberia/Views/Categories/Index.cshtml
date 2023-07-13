@@ -3,13 +3,17 @@
     ViewData["Title"] = "Categories";
 }
 
+@*@section CustomStyles{
+    <link rel="stylesheet" href="~/lib/datatables/datatables.bundle.css" />
+}
+*@
 <div class="card card-custom">
     <div class="card-header">
         <div class="card-title">
             <span class="card-icon">
                 <i class="flaticon2-chat-1 text-primary"></i>
             </span>
-            <h3 class="card-label">Categories</h3>
+            <h2 class="card-label">Categories</h2>
         </div>
         <div class="card-toolbar">
             <a href="javascript:;" class="btn btn-md btn-primary font-weight-bold js-modal" data-title="Add Category" data-url="/Categories/Create">
@@ -73,6 +77,9 @@
 
 @Html.AntiForgeryToken()
 
+@*@section CustomScripts{
+    <script src="~/lib/datatables/datatables.bundle.js"></script>
+}*@
 @section Scripts
     {
     <partial name="_ValidationScriptsPartial" />
@@ -80,15 +87,17 @@
         $(document).ready(function () {
 
             //StartDataTable//
-            $(document).ready(function () {
-                var table = $('#DataTable').DataTable({
-                    lengthChange: false,
-                    buttons: ['copy', 'excel', 'pdf', 'colvis']
-                });
 
-                table.buttons().container()
-                    .appendTo('#DataTable_wrapper .col-md-6:eq(0)');
-            });
+            //$('#DataTable').DataTable()
+
+            //var table = $('#DataTable').DataTable({
+            //    lengthChange: false,
+            //    buttons: ['copy', 'excel', 'pdf', 'colvis']
+            //});
+
+            //table.buttons().container()
+            //    .appendTo('#DataTable_wrapper .col-md-6:eq(0)');
+
             //EndDataTable//
 
             $('.js-toggle-delete').click(function () {

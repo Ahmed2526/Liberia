@@ -8,7 +8,7 @@ namespace Liberia.Helpers
         {
             CreateMap<Category, CategoryVM>().ReverseMap();
 
-
+            CreateMap<Author, AuthorVM>().ReverseMap();
 
         }
     }

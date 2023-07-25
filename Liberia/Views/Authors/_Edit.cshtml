@@ -1,0 +1,14 @@
+﻿@model AuthorVM
+
+<form asp-action="Edit" data-ajax-method="post"
+      data-ajax="true"
+      data-ajax-begin="onModalBegin"
+      data-ajax-success="onModalSuccess"
+      data-ajax-failure="onModalfailure"
+      data-ajax-complete="onModalFinish">
+    <input type="hidden" class="form-control" asp-for="Id">
+    <input type="text" class="form-control" asp-for="Name" placeholder="Name">
+    <span class="text-danger mb-5" asp-validation-for="Name"></span>
+
+    <partial name="_ModalFotter" />
+</form>

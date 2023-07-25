@@ -1,0 +1,77 @@
+﻿@model IEnumerable<Author>
+
+@{
+    ViewData["Title"] = "Authors";
+}
+
+@section CustomStyles{
+    <link rel="stylesheet" href="~/lib/datatables/datatables.bundle.css" />
+}
+
+<div class="card card-custom">
+    <div class="card-header ps-3">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-chat-1 text-primary"></i>
+            </span>
+            <div class="symbol symbol-40px me-3">
+                <div class="symbol-label fs-2 fw-semibold">
+                    <!--begin::Svg Icon | path: icons/duotune/general/gen002.svg-->
+                    <span class="svg-icon svg-icon-2 svg-icon-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </div>
+            </div>
+            <h2 class="card-label">Authors</h2>
+        </div>
+        <div class="card-toolbar">
+            <a href="javascript:;" class="btn btn-md btn-primary font-weight-bold js-modal" data-title="Add Author" data-url="/Authors/Create">
+                <i class="bi bi-plus-circle me-1"></i>Add
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body" id="DataTable_wrapper">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-warning pb-2" role="alert">
+                <h4 class="pt-1">No Authors Found!</h4>
+            </div>
+        }
+        else
+        {
+            <table class="table" style="font-size:1.2rem;" id="DataTable">
+                <thead>
+                    <tr style="font-weight:600">
+                        @*class="pe-2"*@
+                        <th>Name</th>
+                        <th>IsActive</th>
+                        <th>CreatedOn</th>
+                        <th>ModifiedOn</th>
+                        <th>Edit</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <partial name="_AuthorRow" model="item" />
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section CustomScripts{
+    <script src="~/lib/datatables/datatables.bundle.js"></script>
+}
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/authors.js" asp-append-version="true"></script>
+}

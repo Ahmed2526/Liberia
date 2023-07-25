@@ -1,6 +1,8 @@
 using Liberia.Data;
+using Liberia.Helpers;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Liberia
 {
@@ -18,6 +20,9 @@ namespace Liberia
 
             builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
+
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -42,9 +47,12 @@ namespace Liberia
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllerRoute(
+            app.MapControllerRoute
+                (
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Home}/{action=Index}/{id?}"
+                );
+
             app.MapRazorPages();
 
             app.Run();

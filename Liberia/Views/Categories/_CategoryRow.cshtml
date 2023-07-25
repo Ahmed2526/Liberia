@@ -1,0 +1,21 @@
+﻿@model Category
+<tr>
+    <td>@Model.Name</td>
+    <td>
+        <span class="badge rounded-pill text-bg-@(Model.IsActive ? "success" : "danger") js-toggle-badge">
+            @(Model.IsActive ? "Available" : "Deleted")
+        </span>
+    </td>
+    <td>@Model.CreatedOn</td>
+    <td class="js-modified-on">@Model.ModifiedOn</td>
+    <td>
+        <a class="js-modal" href="javascript:;" data-title="Edit Category" data-update="true" data-url="/Categories/Edit/@Model.Id">
+            <i style="font-size:1.3rem" class="bi bi-pencil-square "></i>
+        </a>
+    </td>
+    <td>
+        <a class="ms-2 js-toggle-delete" href="javascript:;" data-id="@Model.Id">
+            <i style="font-size:1.3rem" class="bi bi-x-circle text-danger"></i>
+        </a>
+    </td>
+</tr>

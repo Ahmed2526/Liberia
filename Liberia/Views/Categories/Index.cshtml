@@ -3,16 +3,28 @@
     ViewData["Title"] = "Categories";
 }
 
-@*@section CustomStyles{
+@section CustomStyles{
     <link rel="stylesheet" href="~/lib/datatables/datatables.bundle.css" />
 }
-*@
+
 <div class="card card-custom">
-    <div class="card-header">
+    <div class="card-header ps-3">
         <div class="card-title">
             <span class="card-icon">
                 <i class="flaticon2-chat-1 text-primary"></i>
             </span>
+            <div class="symbol symbol-40px me-3">
+                <div class="symbol-label fs-2 fw-semibold text-success">
+                    <!--begin::Svg Icon | path: icons/duotune/general/gen002.svg-->
+                    <span class="svg-icon svg-icon-2 svg-icon-primary">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path opacity="0.3" d="M21.25 18.525L13.05 21.825C12.35 22.125 11.65 22.125 10.95 21.825L2.75 18.525C1.75 18.125 1.75 16.725 2.75 16.325L4.04999 15.825L10.25 18.325C10.85 18.525 11.45 18.625 12.05 18.625C12.65 18.625 13.25 18.525 13.85 18.325L20.05 15.825L21.35 16.325C22.35 16.725 22.35 18.125 21.25 18.525ZM13.05 16.425L21.25 13.125C22.25 12.725 22.25 11.325 21.25 10.925L13.05 7.62502C12.35 7.32502 11.65 7.32502 10.95 7.62502L2.75 10.925C1.75 11.325 1.75 12.725 2.75 13.125L10.95 16.425C11.65 16.725 12.45 16.725 13.05 16.425Z" fill="currentColor"></path>
+                            <path d="M11.05 11.025L2.84998 7.725C1.84998 7.325 1.84998 5.925 2.84998 5.525L11.05 2.225C11.75 1.925 12.45 1.925 13.15 2.225L21.35 5.525C22.35 5.925 22.35 7.325 21.35 7.725L13.05 11.025C12.45 11.325 11.65 11.325 11.05 11.025Z" fill="currentColor"></path>
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </div>
+            </div>
             <h2 class="card-label">Categories</h2>
         </div>
         <div class="card-toolbar">
@@ -30,46 +42,24 @@
         }
         else
         {
-            <table style="font-size:1.2rem;" id="DataTable" class="table table-striped">
+            <table class="table" style="font-size:1.2rem;" id="DataTable">
                 <thead>
                     <tr style="font-weight:600">
-                        <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">IsActive</th>
-                        <th scope="col">CreatedOn</th>
-                        <th scope="col">ModifiedOn</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Status</th>
+                        @*class="pe-2"*@
+                        <th>Name</th>
+                        <th>IsActive</th>
+                        <th>CreatedOn</th>
+                        <th>ModifiedOn</th>
+                        <th>Edit</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
-                @foreach (var item in Model)
-                {
-                    <tbody>
-                        <tr>
-                            <td>@item.Id</td>
-                            <td>@item.Name</td>
-                            <td>
-                                <span class="badge rounded-pill text-bg-@(item.IsActive ? "success" : "danger") js-toggle-badge">
-                                    @(item.IsActive ? "Available" : "Deleted")
-                                </span>
-                            </td>
-                            <td>@item.CreatedOn</td>
-                            <td class="js-modified-on">@item.ModifiedOn</td>
-                            <td>
-                                <a class="js-modal" href="javascript:;" data-title="Edit Category" data-url="/Categories/Edit/@item.Id">
-                                    <i style="font-size:1.3rem" class="bi bi-pencil-square "></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a class="ms-2 js-toggle-delete" href="javascript:;" data-id="@item.Id">
-                                    <i style="font-size:1.3rem" class="bi bi-x-circle text-danger"></i>
-                                </a>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                    </tbody>
-                }
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <partial name="_CategoryRow" model="item" />
+                    }
+                </tbody>
             </table>
         }
     </div>
@@ -77,79 +67,12 @@
 
 @Html.AntiForgeryToken()
 
-@*@section CustomScripts{
+@section CustomScripts{
     <script src="~/lib/datatables/datatables.bundle.js"></script>
-}*@
-@section Scripts
-    {
+}
+@section Scripts{
     <partial name="_ValidationScriptsPartial" />
-    <script>
-        $(document).ready(function () {
-
-            //StartDataTable//
-
-            //$('#DataTable').DataTable()
-
-            //var table = $('#DataTable').DataTable({
-            //    lengthChange: false,
-            //    buttons: ['copy', 'excel', 'pdf', 'colvis']
-            //});
-
-            //table.buttons().container()
-            //    .appendTo('#DataTable_wrapper .col-md-6:eq(0)');
-
-            //EndDataTable//
-
-            $('.js-toggle-delete').click(function () {
-
-                let Category = $(this);
-                let Categoryid = $(this).data('id');
-
-                bootbox.confirm({
-                    title: 'Delete Category',
-                    message: 'Are You Sure You Want To do This ?',
-                    buttons: {
-                        confirm: {
-                            label: 'Yes',
-                            className: 'btn-danger'
-                        },
-                        cancel: {
-                            label: 'No',
-                            className: 'btn-secondary'
-                        }
-                    },
-                    callback: function (result) {
-
-                        if (result) {
-                            $.ajax({
-                                url: "/Categories/ToggleStatus",
-                                data: {
-                                    id: Categoryid,
-                                    '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
-                                },
-                                type: "POST",
-                                success: function (ModifiedOn) {
-                                    var status = Category.parents('tr').find('.js-toggle-badge');
-                                    var newStatus = status.text().trim() === 'Deleted' ? 'Available' : 'Deleted';
-                                    status.text(newStatus).toggleClass('text-bg-success text-bg-danger');
-
-                                    Category.parents('tr').addClass("animate__animated ");
-                                    Category.parents('tr').toggleClass("animate__shakeX");
-
-                                    Category.parents('tr').find('.js-modified-on').html(ModifiedOn);
-
-                                },
-                                error: function () {
-                                    showErrorMessage();
-                                }
-                            });
-                        }
-                    }
-                });
-            });
-
-        });
-    </script>
+    <script src="~/js/categories.js" asp-append-version="true"></script>
 }
 
 

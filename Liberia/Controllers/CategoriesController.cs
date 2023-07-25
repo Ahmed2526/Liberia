@@ -1,4 +1,6 @@
-﻿using Liberia.Data;
+﻿using AutoMapper;
+using DAL.Models;
+using Liberia.Data;
 using Liberia.Filters;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,16 +9,20 @@ namespace Liberia.Controllers
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public CategoriesController(ApplicationDbContext context)
+        private readonly IMapper _mapper;
+        public CategoriesController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
+
         public async Task<IActionResult> Index()
         {
-            //TODO: use ViewModel
             var categories = await _context.Categories.AsNoTracking().ToListAsync();
+
             return View(categories);
         }
+
         [HttpGet]
         [AjaxFilters]
         public IActionResult Create()
@@ -36,24 +42,24 @@ namespace Liberia.Controllers
                 Name = vm.Name,
                 IsActive = true
             };
+
             _context.Add(category);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return PartialView("_CategoryRow", category);
         }
+
         [HttpGet]
         [AjaxFilters]
         public async Task<IActionResult> Edit(int id)
         {
-            var select = await _context.Categories.FindAsync(id);
-            if (select is null)
+            var selectedCategory = await _context.Categories.FindAsync(id);
+
+            if (selectedCategory is null)
                 return NotFound();
 
-            var vm = new CategoryVM()
-            {
-                Id = select.Id,
-                Name = select.Name
-            };
+            var vm = _mapper.Map<CategoryVM>(selectedCategory);
+
             return PartialView("_Edit", vm);
         }
 
@@ -74,8 +80,9 @@ namespace Liberia.Controllers
             _context.Categories.Update(select);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return PartialView("_CategoryRow", select);
         }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ToggleStatus(int id)
@@ -91,8 +98,18 @@ namespace Liberia.Controllers
             return Ok(Selected.ModifiedOn.ToString());
         }
 
+        public IActionResult checkUnique(CategoryVM vm)
+        {
+            var category = _context.Categories.FirstOrDefault(e => e.Name == vm.Name);
 
+            if (category is null)
+                return Json(true);
 
+            else if (vm.Id == category.Id)
+                return Json(true);
+
+            return Json(false);
+        }
 
     }
 }

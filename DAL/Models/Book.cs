@@ -1,15 +1,12 @@
 ﻿using DAL.Models.BaseModels;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Models
 {
+    [Index(nameof(AuthorId), nameof(Title), IsUnique = true)]
     public class Book : BaseEntity
     {
-        public Book()
-        {
-            Categories = new HashSet<Category>();
-        }
-
         [MaxLength(100)]
         public string Title { get; set; } = string.Empty;
 
@@ -31,7 +28,7 @@ namespace DAL.Models
         [MaxLength(2000)]
         public string Description { get; set; } = string.Empty;
 
-        public ICollection<Category> Categories { get; set; }
+        public List<Category> Categories { get; set; } = new();
 
     }
 }

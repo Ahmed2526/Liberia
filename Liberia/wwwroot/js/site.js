@@ -49,7 +49,7 @@ function onModalSuccess(item) {
 
     //For Re render the newly added item
     KTMenu.init();
-    KTMenu.initHandlers();
+    KTMenu.initGlobalHandlers();
 }
 
 function onModalfailure() {

@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using DAL.Models;
 using Liberia.Data;
 using Liberia.Filters;
 using Microsoft.EntityFrameworkCore;

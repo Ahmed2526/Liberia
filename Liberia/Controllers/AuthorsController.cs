@@ -1,9 +1,6 @@
 ﻿using AutoMapper;
 using Liberia.Data;
 using Liberia.Filters;
-using Liberia.Helpers;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Liberia.Controllers

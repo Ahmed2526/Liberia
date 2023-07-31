@@ -13,10 +13,8 @@ namespace Liberia.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             //ManyTo many Relation Between Categories & Books.
-            builder.Entity<Book>()
-           .HasMany(e => e.Categories)
-           .WithMany(e => e.Books)
-           .UsingEntity<BooksCategories>();
+            builder.Entity<BookCategory>().HasKey(e => new { e.BookId, e.CategoryId });
+            base.OnModelCreating(builder);
 
 
 
@@ -27,7 +25,7 @@ namespace Liberia.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Book> Books { get; set; }
-
+        public DbSet<BookCategory> BooksCategories { get; set; }
 
     }
 }

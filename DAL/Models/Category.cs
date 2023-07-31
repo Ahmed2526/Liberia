@@ -6,6 +6,6 @@ namespace DAL.Models
     {
         [MaxLength(100)]
         public string Name { get; set; } = string.Empty;
-        public List<Book> Books { get; set; } = new();
+        public ICollection<BookCategory> Books { get; set; } = new List<BookCategory>();
     }
 }

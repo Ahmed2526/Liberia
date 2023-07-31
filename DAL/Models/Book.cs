@@ -28,7 +28,7 @@ namespace DAL.Models
         [MaxLength(2000)]
         public string Description { get; set; } = string.Empty;
 
-        public List<Category> Categories { get; set; } = new();
+        public ICollection<BookCategory> Categories { get; set; } = new List<BookCategory>();
 
     }
 }

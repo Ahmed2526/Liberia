@@ -1,4 +1,5 @@
-﻿using DAL.Models.BaseModels;
+﻿using BLL.ICustomService;
+using DAL.Models.BaseModels;
 using Liberia.Data;
 using Liberia.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -9,17 +10,18 @@ namespace Liberia.Controllers
     public class BooksController : Controller
     {
         private readonly ApplicationDbContext _context;
-
-        public BooksController(ApplicationDbContext context)
+        private readonly IImageService _imageService;
+        public BooksController(ApplicationDbContext context, IImageService imageService)
         {
             _context = context;
+            _imageService = imageService;
         }
         public IActionResult Index()
         {
-            var books = _context.Books.AsNoTracking().ToList();
+            var books = _context.Books.Include(e => e.Author).Include(e => e.Categories).AsNoTracking().ToList();
             return View(books);
         }
-        
+
         [HttpGet]
         public IActionResult Create()
         {
@@ -37,6 +39,14 @@ namespace Liberia.Controllers
                 return View("Create", intializedvm);
             }
 
+            var CheckImg = HandleImage(vm.ImageUrl);
+            if (string.IsNullOrEmpty(CheckImg))
+            {
+                ModelState.AddModelError("ImageUrl", "Invalid Photo");
+                var intializedvm = GeneratedInitializedBookVM(vm);
+                return View("Create", intializedvm);
+            }
+
             var book = new Book()
             {
                 Title = vm.Title,
@@ -48,7 +58,7 @@ namespace Liberia.Controllers
                 IsAvailableForRental = vm.IsAvailableForRental,
                 Publisher = vm.Publisher,
                 PublishingDate = vm.PublishingDate,
-                ImageUrl = "test.jpg"
+                ImageUrl = HandleImage(vm.ImageUrl)
             };
 
             foreach (var item in vm.SelectedCategories)
@@ -65,7 +75,11 @@ namespace Liberia.Controllers
         }
 
 
-
+        private string HandleImage(IFormFile img)
+        {
+            var ImgPath = _imageService.SaveImages(img);
+            return ImgPath;
+        }
 
         private BookVM GeneratedInitializedBookVM()
         {

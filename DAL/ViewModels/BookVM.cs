@@ -1,12 +1,5 @@
-﻿using DAL.Models;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.ViewModels
 {
@@ -23,7 +16,8 @@ namespace DAL.ViewModels
         [Display(Name = "Publishing Date")]
         public DateTime PublishingDate { get; set; } = DateTime.Now;
 
-        public IFormFile? ImageUrl { get; set; }
+        [Required]
+        public IFormFile ImageUrl { get; set; }
 
         [MaxLength(50)]
         public string Hall { get; set; } = string.Empty;

@@ -52,7 +52,28 @@
                 <tbody>
                     @foreach (var item in Model)
                     {
-
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Author.Name</td>
+                            <td><img src="~/Images/Books/@item.ImageUrl" class="img-thumbnail"></td>
+                            <td>
+                                <span class="badge rounded-pill text-bg-@(item.IsActive ? "success" : "danger") js-toggle-badge">
+                                    @(item.IsActive ? "Available" : "Deleted")
+                                </span>
+                            </td>
+                            <td>@item.CreatedOn</td>
+                            <td class="js-modified-on">@item.ModifiedOn</td>
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">
+                                    <i style="font-size:1.3rem" class="bi bi-pencil-square "></i>
+                                </a>
+                            </td>
+                            <td>
+                                <a class="ms-2 js-toggle-delete" href="javascript:;" data-id="@item.Id">
+                                    <i style="font-size:1.3rem" class="bi bi-x-circle text-danger"></i>
+                                </a>
+                            </td>
+                        </tr>
                     }
                 </tbody>
             </table>

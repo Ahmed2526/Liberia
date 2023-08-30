@@ -1,3 +1,5 @@
+using BLL.CustomService;
+using BLL.ICustomService;
 using Liberia.Data;
 using Liberia.Helpers;
 using Microsoft.AspNetCore.Identity;
@@ -22,6 +24,10 @@ namespace Liberia
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
+
+            //Custom Services
+            builder.Services.AddScoped(typeof(IImageService), typeof(ImageService));
+
 
             builder.Services.AddControllersWithViews();
 

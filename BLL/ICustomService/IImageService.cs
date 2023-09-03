@@ -10,7 +10,7 @@ namespace BLL.ICustomService
     public interface IImageService
     {
         string SaveImages(IFormFile formFile);
-        string UpdateImages(IFormFile formFile);
-        void DeleteImages(string path);
+        string UpdateImages(IFormFile formFile, string OldPhoto);
+        //void DeleteImages(string path);
     }
 }

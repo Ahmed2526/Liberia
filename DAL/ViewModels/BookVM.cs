@@ -1,13 +1,19 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DAL.ViewModels
 {
     public class BookVM
     {
-        [MaxLength(100)]
+        public int Id { get; set; }
+
+        [Required, MaxLength(100)]
+        [MinLength(3, ErrorMessage = "Minimum Length is 3 char")]
+        [Remote("checkUnique", "Books", AdditionalFields = "Id,AuthorId", ErrorMessage = "Book With Same Title And Author Already Exist!")]
         public string Title { get; set; } = string.Empty;
         [Display(Name ="Author")]
+        [Remote("checkUnique", "Books", AdditionalFields = "Id,Title", ErrorMessage = "Book With Same Title And Author Already Exist!")]
         public int AuthorId { get; set; }
         public IEnumerable<SelectListItem>? Authors { get; set; }
 
@@ -16,8 +22,8 @@ namespace DAL.ViewModels
         [Display(Name = "Publishing Date")]
         public DateTime PublishingDate { get; set; } = DateTime.Now;
 
-        [Required]
-        public IFormFile ImageUrl { get; set; }
+        public IFormFile? ImageUrl { get; set; }
+        public string? ImagePath { get; set; }
 
         [MaxLength(50)]
         public string Hall { get; set; } = string.Empty;

@@ -46,7 +46,14 @@
             <table class="table" style="font-size:1.2rem;" id="DataTable">
                 <thead>
                     <tr style="font-weight:600">
-                        <th></th>
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Poster</th>
+                        <th>IsAvaliable</th>
+                        <th>CreatedOn</th>
+                        <th>ModifiedOn</th>
+                        <th>Hall</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,7 +62,7 @@
                         <tr>
                             <td>@item.Title</td>
                             <td>@item.Author.Name</td>
-                            <td><img src="~/Images/Books/@item.ImageUrl" class="img-thumbnail"></td>
+                            <td><img src="~/Images/Books/@item.ImageName" class="img-thumbnail w-45px h-45px"></td>
                             <td>
                                 <span class="badge rounded-pill text-bg-@(item.IsActive ? "success" : "danger") js-toggle-badge">
                                     @(item.IsActive ? "Available" : "Deleted")
@@ -63,15 +70,34 @@
                             </td>
                             <td>@item.CreatedOn</td>
                             <td class="js-modified-on">@item.ModifiedOn</td>
+                            <td>@item.Hall</td>
                             <td>
-                                <a asp-action="Edit" asp-route-id="@item.Id">
-                                    <i style="font-size:1.3rem" class="bi bi-pencil-square "></i>
-                                </a>
-                            </td>
-                            <td>
-                                <a class="ms-2 js-toggle-delete" href="javascript:;" data-id="@item.Id">
-                                    <i style="font-size:1.3rem" class="bi bi-x-circle text-danger"></i>
-                                </a>
+                                <button type="button" class="btn btn-icon btn-color-muted btn-active-light-primary" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-end">
+                                    <!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
+                                    <span class="svg-icon svg-icon-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                </button>
+                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-3" data-kt-menu="true" style="">
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="menu-link px-3 js-render-modal">
+                                            Edit
+                                        </a>
+                                    </div>
+                                    <!--end::Menu item-->
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a href="javascript:;" data-id="@item.Id" class="menu-link flex-stack px-3 js-toggle-delete">
+                                            Delete
+                                        </a>
+                                    </div>
+                                    <!--end::Menu item-->
+                                </div>
                             </td>
                         </tr>
                     }
@@ -85,4 +111,7 @@
 
 @section CustomScripts{
     <script src="~/lib/datatables/datatables.bundle.js"></script>
+}
+@section Scripts{
+    <script src="~/js/books.js"></script>
 }

@@ -1,6 +1,7 @@
 ﻿var updatedRow;
 
 $(document).ready(function () {
+    
 
     //Generic modal//
     $('body').delegate('.js-modal', 'click', function () {

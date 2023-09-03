@@ -58,14 +58,46 @@ namespace BLL.CustomService
             }
         }
 
-        public string UpdateImages(IFormFile formFile)
+        public string UpdateImages(IFormFile formFile, string OldPhotoName)
         {
-            throw new NotImplementedException();
-        }
+            try
+            {
+                if (formFile is not null)
+                {
+                    var idPhotoExtension = AllowedExtensions.Contains(Path.GetExtension(formFile.FileName));
 
-        public void DeleteImages(string path)
-        {
-            throw new NotImplementedException();
+                    //Check Extension
+                    if (!idPhotoExtension)
+                        return null;
+
+                    //Check File Size
+                    if (formFile.Length > MaxAllowedFileSize)
+                        return null;
+
+                    //New Names
+                    var PhotoNewName = Guid.NewGuid() + Path.GetExtension(formFile.FileName);
+
+                    //Generating Paths
+                    var OldPhotoPath = Path.Combine($"{_webHostEnvironment.WebRootPath}/Images/Books", OldPhotoName);
+                    var NewPhotoPath = Path.Combine($"{_webHostEnvironment.WebRootPath}/Images/Books", PhotoNewName);
+
+                    //Physical Copying
+                    using var IdPhotostream = System.IO.File.Create(NewPhotoPath);
+                    formFile.CopyTo(IdPhotostream);
+
+                    //DeleteOldPhoto 
+                    if (OldPhotoPath is not null)
+                        System.IO.File.Delete(OldPhotoPath);
+
+                    return PhotoNewName;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return null;
         }
+       
     }
 }

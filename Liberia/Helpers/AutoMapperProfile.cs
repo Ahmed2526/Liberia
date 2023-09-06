@@ -10,6 +10,10 @@ namespace Liberia.Helpers
 
             CreateMap<Author, AuthorVM>().ReverseMap();
 
+            CreateMap<Book, BookVM>()
+                .ForMember(dest => dest.Author, from => from.MapFrom(src => src.Author!.Name))
+                .ForMember(dest => dest.Categories, from => from.MapFrom(src => src.Categories.Select(e => e.Category!.Name)));
+
         }
     }
 }

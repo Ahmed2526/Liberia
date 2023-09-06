@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Book>
+﻿@model IEnumerable<BookVM>
 
 @{
     ViewData["Title"] = "Books";
@@ -52,6 +52,7 @@
                         <th>IsAvaliable</th>
                         <th>CreatedOn</th>
                         <th>ModifiedOn</th>
+                        <th>Categories</th>
                         <th>Hall</th>
                         <th>Actions</th>
                     </tr>
@@ -61,8 +62,12 @@
                     {
                         <tr>
                             <td>@item.Title</td>
-                            <td>@item.Author.Name</td>
-                            <td><img src="~/Images/Books/@item.ImageName" class="img-thumbnail w-45px h-45px"></td>
+                            <td>@item.Author</td>
+                            <td>
+                                <a data-fslightbox href="~/Images/Books/@item.ImageName">
+                                    <img class="img-thumbnail w-45px h-45px" src="~/Images/Books//Thumbnails/@item.ThumbNail" alt="@item.Title" />
+                                </a>
+                            </td>
                             <td>
                                 <span class="badge rounded-pill text-bg-@(item.IsActive ? "success" : "danger") js-toggle-badge">
                                     @(item.IsActive ? "Available" : "Deleted")
@@ -70,6 +75,14 @@
                             </td>
                             <td>@item.CreatedOn</td>
                             <td class="js-modified-on">@item.ModifiedOn</td>
+                            <td>
+                                @foreach (var category in item.Categories)
+                                {
+                                    <span class="badge badge-light-info me-auto">
+                                        @category
+                                    </span>
+                                }
+                            </td>
                             <td>@item.Hall</td>
                             <td>
                                 <button type="button" class="btn btn-icon btn-color-muted btn-active-light-primary" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-end">
@@ -111,6 +124,7 @@
 
 @section CustomScripts{
     <script src="~/lib/datatables/datatables.bundle.js"></script>
+    <script src="~/assets/plugins/fslightbox/fslightbox.bundle.js"></script>
 }
 @section Scripts{
     <script src="~/js/books.js"></script>

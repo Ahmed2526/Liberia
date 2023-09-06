@@ -1,4 +1,4 @@
-﻿@model BookVM
+﻿@model BookFormVM
 
 @{
     ViewData["Title"] = "Books";
@@ -16,33 +16,33 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="row">
                 <div class="col-4">
-                    <div class="mb-3">
-                        <label asp-for="Title" class="form-label"></label>
-                        <input asp-for="Title" placeholder="Title" class="form-control" />
+                    <div class="form-floating mb-5">
+                        <input type="text" class="form-control form-control-solid" placeholder="Title" asp-for="Title" />
+                        <label asp-for="Title"></label>
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="AuthorId" class="form-label"></label>
-                        <select data-control="select2" data-placeholder="Select Author" class="form-select" asp-for="AuthorId" asp-items="@Model.Authors">
+                    <div class="form-floating mb-5">
+                        <select data-control="select2" data-placeholder="Select Author" class="form-select form-select-solid" asp-for="AuthorId" asp-items="@Model.Authors">
                             <option value="">Select Author</option>
                         </select>
+                        <label asp-for="AuthorId"></label>
                         <span asp-validation-for="AuthorId" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="ImageUrl" class="form-label"></label>
-                        <input asp-for="ImageUrl" class="form-control" accept=".jpg,.jpeg,.png"
+                    <div class="form-floating mb-5">
+                        <input asp-for="ImageUrl" placeholder="ImageUrl" class="form-control form-control-solid" accept=".jpg,.jpeg,.png"
                                onchange="document.getElementById('js-Img').src=window.URL.createObjectURL(this.files[0])" />
+                        <label asp-for="ImageUrl"></label>
                         <span asp-validation-for="ImageUrl" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="SelectedCategories" class="form-label"></label>
-                        <select data-control="select2" data-placeholder="Select Categories" class="form-select" asp-for="SelectedCategories" asp-items="@Model.Categories">
+                    <div class="form-floating mb-5">
+                        <select data-control="select2" data-placeholder="Select Categories" class="form-select form-select-solid" asp-for="SelectedCategories" asp-items="@Model.Categories">
                         </select>
+                        <label asp-for="SelectedCategories"></label>
                         <span asp-validation-for="SelectedCategories" class="text-danger"></span>
                     </div>
-                    <div class="mb-3">
-                        <label asp-for="Publisher" class="form-label"></label>
-                        <input asp-for="Publisher" class="form-control" />
+                    <div class="form-floating mb-5">
+                        <input asp-for="Publisher" placeholder="Publisher" class="form-control form-control-solid" />
+                        <label asp-for="Publisher"></label>
                         <span asp-validation-for="Publisher" class="text-danger"></span>
                     </div>
                     <div class="form-check form-switch mt-5 mb-5">
@@ -50,16 +50,26 @@
                         <input type="checkbox" asp-for="IsAvailableForRental" class="form-check-input" />
                         <span asp-validation-for="IsAvailableForRental" class="text-danger"></span>
                     </div>
-                    <div class="mb-4">
-                        <label asp-for="Hall" class="form-label"></label>
-                        <input asp-for="Hall" class="form-control" />
+                    <div class="form-floating mb-5">
+                        <input asp-for="Hall" placeholder="Hall" class="form-control form-control-solid" />
+                        <label asp-for="Hall"></label>
                         <span asp-validation-for="Hall" class="text-danger"></span>
                     </div>
-                    <div class="mb-5">
-                        <label asp-for="PublishingDate" class="form-label"></label>
-                        <input type="date" asp-for="PublishingDate" class="form-control" />
+                    <div class="form-floating mb-5">
+                        <input type="date" asp-for="PublishingDate" placeholder="PublishingDate" class="form-control form-control-solid" />
+                        <label asp-for="PublishingDate"></label>
                         <span asp-validation-for="PublishingDate" class="text-danger"></span>
                     </div>
+                    <div class="form-group mt-10">
+                        <button type="submit" class="btn btn-primary me-2">
+                            <span class="indicator-label">Save</span>
+                            <span class="indicator-progress">
+                                Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                            </span>
+                        </button>
+                        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                    </div>
+
                 </div>
                 <div class="col-1">
                 </div>
@@ -67,33 +77,26 @@
                     <div class="col-1 mb-3">
                         <img src="~/Images/default-no-image.png" id="js-Img" class="image-input-wrapper w-200px h-250px" />
                     </div>
-                    
-                    <div class="col-9 mt-5">
-                        <label asp-for="Description" class="form-label"></label>
-                        <textarea id="kt_docs_tinymce_basic" asp-for="Description" class="tox-target">
-                        <h1>Quick and Simple TinyMCE 5 Integration</h1>
-                        <p>Here goes the&nbsp;<a href="#">Minitial content of the editor</a>. Lorem Ipsum is simply dummy text of the&nbsp;<em>printing and typesetting</em>&nbsp;industry.</p>
-                        <blockquote>Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled. Lorem Ipsum is simply dummy text of the printing and typesetting industry.</blockquote>
-                        <h3 style="text-align: right;">Flexible &amp; Powerful</h3>
-                        <p style="text-align: right;"><strong>Lorem Ipsum has been the industry's</strong>&nbsp;standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled.</p>
-                        <ul>
-                        <li>List item 1</li>
-                        <li>List item 2</li>
-                        <li>List item 3</li>
-                        <li>List item 4</li>
-                        </ul>
+                    <div class="form-text">
+                        <span class="d-block">Image must be less than 2MB</span>
+                        <span>Allowed Extensions: jpg , jpeg , png</span>
+                    </div>
+                    <div class="form-floating col-9 mt-5">
+                        <textarea id="kt_docs_tinymce_basic" asp-for="Description" placeholder="Description" class="tox-target">                       
                         </textarea>
+                        <label asp-for="Description"></label>
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
+
         </form>
     </div>
 </div>
 
+@section CustomScripts{
+    <script src="~/assets/plugins/tinymce/tinymce.bundle.js"></script>
+}
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
 }

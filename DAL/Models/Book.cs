@@ -17,8 +17,8 @@ namespace DAL.Models
         [MaxLength(200)]
         public string Publisher { get; set; } = string.Empty;
         public DateTime PublishingDate { get; set; }
-
         public string ImageName { get; set; } = string.Empty;
+        public string ThumbNail { get; set; } = string.Empty;
 
         [MaxLength(50)]
         public string Hall { get; set; } = string.Empty;

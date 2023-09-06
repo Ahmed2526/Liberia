@@ -1,4 +1,5 @@
-﻿using BLL.ICustomService;
+﻿using AutoMapper;
+using BLL.ICustomService;
 using DAL.Models;
 using DAL.Models.BaseModels;
 using Liberia.Data;
@@ -12,39 +13,63 @@ namespace Liberia.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IImageService _imageService;
-        public BooksController(ApplicationDbContext context, IImageService imageService)
+        private readonly IMapper _mapper;
+        public BooksController(ApplicationDbContext context, IImageService imageService, IMapper mapper)
         {
             _context = context;
             _imageService = imageService;
+            _mapper = mapper;
         }
         public IActionResult Index()
         {
-            var books = _context.Books.Include(e => e.Author).Where(e => e.Author.IsActive == true).AsNoTracking().ToList();
-            return View(books);
+            var books = _context.Books
+                .Include(e => e.Author)
+                .Include(e => e.Categories)
+                .ThenInclude(e => e.Category)
+                .Where(e => e.Author!.IsActive == true).AsNoTracking().ToList();
+
+            var booksvm = _mapper.Map<List<BookVM>>(books);
+            return View(booksvm);
+        }
+
+        public IActionResult Details(int Id)
+        {
+            var book = _context.Books
+                .Include(e => e.Author)
+                .Include(e => e.Categories)
+                .ThenInclude(e => e.Category)
+                .FirstOrDefault(e => e.Id == Id);
+
+            if (book is null)
+                return NotFound();
+
+            var bookvm = _mapper.Map<BookVM>(book);
+
+            return View(bookvm);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
-            var bookVM = GeneratedInitializedBookVM();
-            return View(bookVM);
+            var BookFormVM = GeneratedInitializedBookFormVM();
+            return View(BookFormVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(BookVM vm)
+        public IActionResult Create(BookFormVM vm)
         {
             if (!ModelState.IsValid)
             {
-                var intializedvm = GeneratedInitializedBookVM(vm);
+                var intializedvm = GeneratedInitializedBookFormVM(vm);
                 return View("Create", intializedvm);
             }
 
-            var CheckImg = HandleImage(vm.ImageUrl);
-            if (string.IsNullOrEmpty(CheckImg))
+            var CheckImg = HandleImage(vm.ImageUrl!);
+            if (CheckImg is null)
             {
                 ModelState.AddModelError("ImageUrl", "Invalid Photo");
-                var intializedvm = GeneratedInitializedBookVM(vm);
+                var intializedvm = GeneratedInitializedBookFormVM(vm);
                 return View("Create", intializedvm);
             }
 
@@ -58,9 +83,16 @@ namespace Liberia.Controllers
                 Hall = vm.Hall,
                 IsAvailableForRental = vm.IsAvailableForRental,
                 Publisher = vm.Publisher,
-                PublishingDate = vm.PublishingDate,
-                ImageName = HandleImage(vm.ImageUrl)
+                PublishingDate = vm.PublishingDate
             };
+            var CheckOgImgExist = CheckImg.TryGetValue("OriginalImg", out string OriginalImg);
+            var CheckThumbNailExist = CheckImg.TryGetValue("Thumbnail", out string thumbNail);
+
+            if (!CheckOgImgExist || !CheckThumbNailExist)
+                ModelState.AddModelError("ImageUrl", "Invalid Photo");
+
+            book.ImageName = OriginalImg!;
+            book.ThumbNail = thumbNail!;
 
             foreach (var item in vm.SelectedCategories)
             {
@@ -82,7 +114,7 @@ namespace Liberia.Controllers
             if (selected is null)
                 return NotFound();
 
-            var BookVm = new BookVM()
+            var BookFormVM = new BookFormVM()
             {
                 Id = selected.Id,
                 AuthorId = selected.AuthorId,
@@ -96,17 +128,17 @@ namespace Liberia.Controllers
                 SelectedCategories = selected.Categories.Select(e => e.CategoryId).ToList()
             };
 
-            var finalbookVm = GeneratedInitializedBookVM(BookVm);
-            return View(finalbookVm);
+            var finalBookFormVM = GeneratedInitializedBookFormVM(BookFormVM);
+            return View(finalBookFormVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(BookVM vm)
+        public IActionResult Edit(BookFormVM vm)
         {
             if (!ModelState.IsValid)
             {
-                var intializedvm = GeneratedInitializedBookVM(vm);
+                var intializedvm = GeneratedInitializedBookFormVM(vm);
                 return View("Edit", intializedvm);
             }
 
@@ -124,10 +156,21 @@ namespace Liberia.Controllers
             selected.AuthorId = vm.AuthorId;
             selected.ModifiedOn = DateTime.Now;
 
+            //Handle Image
             if (vm.ImageUrl is not null)
             {
-                var UpdatedImg = _imageService.UpdateImages(vm.ImageUrl, selected.ImageName);
-                selected.ImageName = UpdatedImg;
+                var UpdatedImg = _imageService.UpdateImages(vm.ImageUrl, selected.ImageName, selected.ThumbNail);
+                if (UpdatedImg is not null)
+                {
+                    var CheckOgImgExist = UpdatedImg.TryGetValue("OriginalImg", out string OriginalImg);
+                    var CheckThumbNailExist = UpdatedImg.TryGetValue("Thumbnail", out string thumbNail);
+
+                    if (!CheckOgImgExist || !CheckThumbNailExist)
+                        ModelState.AddModelError("ImageUrl", "Invalid Photo");
+
+                    selected.ImageName = OriginalImg!;
+                    selected.ThumbNail = thumbNail!;
+                }
             }
 
             //Remove Old Categories
@@ -148,7 +191,7 @@ namespace Liberia.Controllers
             _context.Update(selected);
             _context.SaveChanges();
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { Id = selected.Id });
         }
 
         [HttpPost]
@@ -166,7 +209,7 @@ namespace Liberia.Controllers
             return Ok(Selected.ModifiedOn.ToString());
         }
 
-        public IActionResult checkUnique(BookVM vm)
+        public IActionResult checkUnique(BookFormVM vm)
         {
             var book = _context.Books
                 .FirstOrDefault(t => t.Title == vm.Title && t.AuthorId == vm.AuthorId);
@@ -181,12 +224,12 @@ namespace Liberia.Controllers
         }
 
 
-        private string HandleImage(IFormFile img)
+        private Dictionary<string, string> HandleImage(IFormFile img)
         {
             var ImgPath = _imageService.SaveImages(img);
             return ImgPath;
         }
-        private BookVM GeneratedInitializedBookVM()
+        private BookFormVM GeneratedInitializedBookFormVM()
         {
             var authors = _context.Authors.Where(a => a.IsActive == true).
                Select(a => new SelectListItem
@@ -203,14 +246,14 @@ namespace Liberia.Controllers
                 })
                 .OrderBy(a => a.Text).ToList();
 
-            var bookVM = new BookVM()
+            var BookFormVM = new BookFormVM()
             {
                 Authors = authors,
                 Categories = categories
             };
-            return bookVM;
+            return BookFormVM;
         }
-        private BookVM GeneratedInitializedBookVM(BookVM vm)
+        private BookFormVM GeneratedInitializedBookFormVM(BookFormVM vm)
         {
             var authors = _context.Authors.Where(a => a.IsActive == true).
                Select(a => new SelectListItem

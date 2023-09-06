@@ -1,7 +1,30 @@
 ﻿var updatedRow;
 
 $(document).ready(function () {
-    
+
+    //Disable button and add loading animation.
+    $('form').on('submit', function () {
+        if ($('#kt_docs_tinymce_basic').length > 0) {
+            $('#kt_docs_tinymce_basic').each(function () {
+                var input = $(this);
+                var content = tinyMCE.get(input.attr('id')).getContent();
+                input.val(content);
+            });
+        }
+        var isvalid = $(this).valid();
+        if (isvalid) disableSubmitButton();
+    });
+
+    //TinyMce Start
+    if ($('#kt_docs_tinymce_basic').length > 0) {
+        var options = { selector: "#kt_docs_tinymce_basic", height: "265" };
+        if (KTThemeMode.getMode() === "dark") {
+            options["skin"] = "oxide-dark";
+            options["content_css"] = "dark";
+        }
+        tinymce.init(options);
+    }
+    //TincyMce End
 
     //Generic modal//
     $('body').delegate('.js-modal', 'click', function () {
@@ -30,9 +53,12 @@ $(document).ready(function () {
         modal.modal('show');
     });
 });
+//Disable button and add loading animation.
+function disableSubmitButton() {
+    $("body :submit").attr('disabled', 'true').attr("data-kt-indicator", "on");
+}
 function onModalBegin() {
-    //Disable button and add loading animation.
-    $("body :submit").attr('disabled', 'true').attr("data-kt-indicator","on");
+    disableSubmitButton();
 }
 
 function onModalSuccess(item) {

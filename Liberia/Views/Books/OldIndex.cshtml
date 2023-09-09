@@ -1,0 +1,131 @@
+﻿@model IEnumerable<BookVM>
+
+@{
+    ViewData["Title"] = "Books";
+}
+
+@section CustomStyles{
+    <link rel="stylesheet" href="~/lib/datatables/datatables.bundle.css" />
+}
+
+<div class="card card-custom">
+    <div class="card-header ps-3">
+        <div class="card-title">
+            <span class="card-icon">
+                <i class="flaticon2-chat-1 text-primary"></i>
+            </span>
+            <div class="symbol symbol-40px me-3">
+                <div class="symbol-label fs-2 fw-semibold">
+                    <!--begin::Svg Icon | path: icons/duotune/general/gen002.svg-->
+                    <span class="svg-icon svg-icon-2 svg-icon-primary">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-book-fill" viewBox="0 0 16 16">
+                            <path d="M8 1.783C7.015.936 5.587.81 4.287.94c-1.514.153-3.042.672-3.994 1.105A.5.5 0 0 0 0 2.5v11a.5.5 0 0 0 .707.455c.882-.4 2.303-.881 3.68-1.02 1.409-.142 2.59.087 3.223.877a.5.5 0 0 0 .78 0c.633-.79 1.814-1.019 3.222-.877 1.378.139 2.8.62 3.681 1.02A.5.5 0 0 0 16 13.5v-11a.5.5 0 0 0-.293-.455c-.952-.433-2.48-.952-3.994-1.105C10.413.809 8.985.936 8 1.783z" />
+                        </svg>
+                    </span>
+                    <!--end::Svg Icon-->
+                </div>
+            </div>
+            <h2 class="card-label">Books</h2>
+        </div>
+        <div class="card-toolbar">
+            <a asp-controller="Books" asp-action="Create" class="btn btn-md btn-primary font-weight-bold">
+                <i class="bi bi-plus-circle me-1"></i>Add
+            </a>
+        </div>
+    </div>
+
+    <div class="card-body" id="DataTable_wrapper">
+        @if (!Model.Any())
+        {
+            <div class="alert alert-warning pb-2" role="alert">
+                <h4 class="pt-1">No Books Found!</h4>
+            </div>
+        }
+        else
+        {
+            <table class="table gy-4 align-middle" style="font-size:1.2rem;" id="DataTable">
+                <thead>
+                    <tr style="font-weight:600">
+                        <th>Title</th>
+                        <th>Author</th>
+                        <th>Poster</th>
+                        <th>IsAvaliable</th>
+                        <th>CreatedOn</th>
+                        <th>ModifiedOn</th>
+                        <th>Categories</th>
+                        <th>Hall</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Author</td>
+                            <td>
+                                <a data-fslightbox href="~/Images/Books/@item.ImageName">
+                                    <img class="img-thumbnail w-45px h-45px" src="~/Images/Books//Thumbnails/@item.ThumbNail" alt="@item.Title" />
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge rounded-pill text-bg-@(item.IsActive ? "success" : "danger") js-toggle-badge">
+                                    @(item.IsActive ? "Available" : "Deleted")
+                                </span>
+                            </td>
+                            <td>@item.CreatedOn</td>
+                            <td class="js-modified-on">@item.ModifiedOn</td>
+                            <td>
+                                @foreach (var category in item.Categories)
+                                {
+                                    <span class="badge badge-light-info me-auto">
+                                        @category
+                                    </span>
+                                }
+                            </td>
+                            <td>@item.Hall</td>
+                            <td>
+                                <button type="button" class="btn btn-icon btn-color-muted btn-active-light-primary" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-end">
+                                    <!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
+                                    <span class="svg-icon svg-icon-2">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+                                        </svg>
+                                    </span>
+                                    <!--end::Svg Icon-->
+                                </button>
+                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-3" data-kt-menu="true" style="">
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a asp-action="Edit" asp-route-id="@item.Id" class="menu-link px-3 js-render-modal">
+                                            Edit
+                                        </a>
+                                    </div>
+                                    <!--end::Menu item-->
+                                    <!--begin::Menu item-->
+                                    <div class="menu-item px-3">
+                                        <a href="javascript:;" data-id="@item.Id" class="menu-link flex-stack px-3 js-toggle-delete">
+                                            Delete
+                                        </a>
+                                    </div>
+                                    <!--end::Menu item-->
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@Html.AntiForgeryToken()
+
+@section CustomScripts{
+    <script src="~/lib/datatables/datatables.bundle.js"></script>
+    <script src="~/assets/plugins/fslightbox/fslightbox.bundle.js"></script>
+}
+@section Scripts{
+    <script src="~/js/books.js"></script>
+}

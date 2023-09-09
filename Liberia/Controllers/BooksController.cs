@@ -6,6 +6,7 @@ using Liberia.Data;
 using Liberia.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Dynamic.Core;
 
 namespace Liberia.Controllers
 {
@@ -22,14 +23,42 @@ namespace Liberia.Controllers
         }
         public IActionResult Index()
         {
-            var books = _context.Books
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult GetBooks()
+        {
+            var skip = int.Parse(Request.Form["start"]);
+            var PageSize = int.Parse(Request.Form["length"]);
+            var searchValue = Request.Form["search[value]"];
+
+            var orderColumnIndex = Request.Form["order[0][column]"];
+            var orderColumn = Request.Form[$"columns[{orderColumnIndex}][name]"];
+            var orderDirection = Request.Form["order[0][dir]"];
+
+            IQueryable<Book> booksQuery = _context.Books
                 .Include(e => e.Author)
                 .Include(e => e.Categories)
-                .ThenInclude(e => e.Category)
-                .Where(e => e.Author!.IsActive == true).AsNoTracking().ToList();
+                .ThenInclude(e => e.Category);
 
-            var booksvm = _mapper.Map<List<BookVM>>(books);
-            return View(booksvm);
+            if (!string.IsNullOrEmpty(searchValue))
+                booksQuery = booksQuery
+                    .Where(e => e.Title.Contains(searchValue)
+                   || e.Author!.Name.Contains(searchValue));
+
+            //LINQ Dynamic Core Package
+            var books = booksQuery.Where(e => e.Author!.IsActive == true)
+              .Skip(skip).Take(PageSize)
+              .OrderBy($"{orderColumn} {orderDirection}").ToList();
+
+            var data = _mapper.Map<List<BookVM>>(books);
+
+            var recordsTotal = _context.Books.Where(e => e.Author!.IsActive == true).Count();
+
+            var jsonData = new { recordsFiltered = recordsTotal, recordsTotal = recordsTotal, data = data };
+
+            return Ok(jsonData);
         }
 
         public IActionResult Details(int Id)
@@ -85,8 +114,8 @@ namespace Liberia.Controllers
                 Publisher = vm.Publisher,
                 PublishingDate = vm.PublishingDate
             };
-            var CheckOgImgExist = CheckImg.TryGetValue("OriginalImg", out string OriginalImg);
-            var CheckThumbNailExist = CheckImg.TryGetValue("Thumbnail", out string thumbNail);
+            var CheckOgImgExist = CheckImg.TryGetValue("OriginalImg", out string? OriginalImg);
+            var CheckThumbNailExist = CheckImg.TryGetValue("Thumbnail", out string? thumbNail);
 
             if (!CheckOgImgExist || !CheckThumbNailExist)
                 ModelState.AddModelError("ImageUrl", "Invalid Photo");
@@ -162,8 +191,8 @@ namespace Liberia.Controllers
                 var UpdatedImg = _imageService.UpdateImages(vm.ImageUrl, selected.ImageName, selected.ThumbNail);
                 if (UpdatedImg is not null)
                 {
-                    var CheckOgImgExist = UpdatedImg.TryGetValue("OriginalImg", out string OriginalImg);
-                    var CheckThumbNailExist = UpdatedImg.TryGetValue("Thumbnail", out string thumbNail);
+                    var CheckOgImgExist = UpdatedImg.TryGetValue("OriginalImg", out string? OriginalImg);
+                    var CheckThumbNailExist = UpdatedImg.TryGetValue("Thumbnail", out string? thumbNail);
 
                     if (!CheckOgImgExist || !CheckThumbNailExist)
                         ModelState.AddModelError("ImageUrl", "Invalid Photo");

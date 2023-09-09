@@ -23,7 +23,7 @@ namespace Liberia.Controllers
         }
 
         [HttpGet]
-        [AjaxFilters]
+        [AjaxOnly]
         public IActionResult Create()
         {
             return PartialView("_Create");
@@ -49,7 +49,7 @@ namespace Liberia.Controllers
         }
 
         [HttpGet]
-        [AjaxFilters]
+        [AjaxOnly]
         public async Task<IActionResult> Edit(int id)
         {
             var selectedAuthor = await _Context.Authors.FindAsync(id);

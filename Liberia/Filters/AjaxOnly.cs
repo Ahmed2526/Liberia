@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ActionConstraints;
 
 namespace Liberia.Filters
 {
-    public class AjaxFilters : ActionMethodSelectorAttribute
+    public class AjaxOnly : ActionMethodSelectorAttribute
     {
         public override bool IsValidForRequest(RouteContext routeContext, ActionDescriptor action)
         {

@@ -1,6 +1,4 @@
-﻿@model IEnumerable<BookVM>
-
-@{
+﻿@{
     ViewData["Title"] = "Books";
 }
 
@@ -35,88 +33,37 @@
     </div>
 
     <div class="card-body" id="DataTable_wrapper">
-        @if (!Model.Any())
-        {
-            <div class="alert alert-warning pb-2" role="alert">
-                <h4 class="pt-1">No Books Found!</h4>
+
+        <div class="card-title">
+            <div class="d-flex align-items-center position-relative my-1">
+                <span class="svg-icon svg-icon-1 position-absolute ms-4">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect opacity="0.5" x="17.0365" y="15.1223" width="8.15546" height="2" rx="1" transform="rotate(45 17.0365 15.1223)" fill="currentColor"></rect>
+                        <path d="M11 19C6.55556 19 3 15.4444 3 11C3 6.55556 6.55556 3 11 3C15.4444 3 19 6.55556 19 11C19 15.4444 15.4444 19 11 19ZM11 5C7.53333 5 5 7.53333 5 11C5 14.4667 7.53333 17 11 17C14.4667 17 17 14.4667 17 11C17 7.53333 14.4667 5 11 5Z" fill="currentColor"></path>
+                    </svg>
+                </span>
+                <input type="text" id="search" data-kt-filter="search" class="form-control form-control-solid w-250px ps-14" placeholder="Search by title or author..." />
             </div>
-        }
-        else
-        {
-            <table class="table" style="font-size:1.2rem;" id="DataTable">
-                <thead>
-                    <tr style="font-weight:600">
-                        <th>Title</th>
-                        <th>Author</th>
-                        <th>Poster</th>
-                        <th>IsAvaliable</th>
-                        <th>CreatedOn</th>
-                        <th>ModifiedOn</th>
-                        <th>Categories</th>
-                        <th>Hall</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.Title</td>
-                            <td>@item.Author</td>
-                            <td>
-                                <a data-fslightbox href="~/Images/Books/@item.ImageName">
-                                    <img class="img-thumbnail w-45px h-45px" src="~/Images/Books//Thumbnails/@item.ThumbNail" alt="@item.Title" />
-                                </a>
-                            </td>
-                            <td>
-                                <span class="badge rounded-pill text-bg-@(item.IsActive ? "success" : "danger") js-toggle-badge">
-                                    @(item.IsActive ? "Available" : "Deleted")
-                                </span>
-                            </td>
-                            <td>@item.CreatedOn</td>
-                            <td class="js-modified-on">@item.ModifiedOn</td>
-                            <td>
-                                @foreach (var category in item.Categories)
-                                {
-                                    <span class="badge badge-light-info me-auto">
-                                        @category
-                                    </span>
-                                }
-                            </td>
-                            <td>@item.Hall</td>
-                            <td>
-                                <button type="button" class="btn btn-icon btn-color-muted btn-active-light-primary" data-kt-menu-trigger="hover" data-kt-menu-placement="bottom-end">
-                                    <!--begin::Svg Icon | path: icons/duotune/general/gen024.svg-->
-                                    <span class="svg-icon svg-icon-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                            <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
-                                            <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
-                                        </svg>
-                                    </span>
-                                    <!--end::Svg Icon-->
-                                </button>
-                                <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-3" data-kt-menu="true" style="">
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="menu-link px-3 js-render-modal">
-                                            Edit
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                    <!--begin::Menu item-->
-                                    <div class="menu-item px-3">
-                                        <a href="javascript:;" data-id="@item.Id" class="menu-link flex-stack px-3 js-toggle-delete">
-                                            Delete
-                                        </a>
-                                    </div>
-                                    <!--end::Menu item-->
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+        </div>
+
+        <table class="table gy-4 align-middle" style="font-size:1.2rem;" id="BooksTable">
+            <thead>
+                <tr style="font-weight:600">
+                    <th>#</th>
+                    <th>Book</th>
+                    <th>Publisher</th>
+                    <th>Hall</th>
+                    <th>AddedOn</th>
+                    <th>Categories</th>
+                    <th>status</th>
+                    <th>Rental</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
     </div>
 </div>
 
@@ -127,5 +74,5 @@
     <script src="~/assets/plugins/fslightbox/fslightbox.bundle.js"></script>
 }
 @section Scripts{
-    <script src="~/js/books.js"></script>
+    <script src="~/js/books.js" asp-append-version="true"></script>
 }

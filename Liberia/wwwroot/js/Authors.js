@@ -1,7 +1,7 @@
 ﻿$(document).ready(function () {
 
     //StartDataTable//
-    $('#DataTable').DataTable();
+    var datatable = $('#DataTable').DataTable();
 
     $('body').delegate('.js-toggle-delete', 'click', function () {
 
@@ -49,4 +49,10 @@
             }
         });
     });
+
+    //Start Search Button
+    $('#search').on('keyup click', function () {
+        datatable.search($('#search').val()).draw();
+    });
+    //End Search Button
 });

@@ -12,8 +12,8 @@
             <div class="d-flex flex-wrap flex-sm-nowrap mb-6">
                 <!--begin::Image-->
                 <div class="d-flex flex-center flex-shrink-0 bg-light rounded w-150px h-150px w-lg-150px h-lg-150px me-7 mb-4">
-                    <a data-fslightbox href="~/Images/Books/@Model.ImageName">
-                        <img class="mw-95px mw-lg-130px" src="~/Images/Books//Thumbnails/@Model.ThumbNail" alt="@Model.Title" />
+                    <a data-fslightbox href="@Model.ImageName">
+                        <img class="mw-95px mw-lg-130px" src="@Model.ThumbNail" alt="@Model.Title" />
                     </a>
                 </div>
                 <!--end::Image-->
@@ -25,7 +25,7 @@
                         <div class="d-flex flex-column">
                             <!--begin::Status-->
                             <div class="d-flex align-items-center mb-1">
-                                <a href="#" class="text-gray-800 text-hover-primary fs-2 fw-bold me-3">@Model.Title</a>
+                                <a class="text-gray-800 fs-2 fw-bold me-3">@Model.Title</a>
                                 <span class="badge badge-light-@(Model.IsActive ? Model.IsAvailableForRental ? "success" : "warning" :"danger") me-auto">
                                     @(Model.IsActive ? Model.IsAvailableForRental ? "Available for rental" : "Not available for rental" : "Deleted")
                                 </span>

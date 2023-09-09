@@ -29,7 +29,7 @@
                     return `<div class="d-flex align-items-center">
                                  <a href="/Books/Details/${row.id}">
                                    <div class="symbol symbol-50px me-3">
-                                      <img src="/Images/Books/${row.imageName}" alt="">
+                                      <img src="${row.imageName}" alt="">
                                    </div>
                                 </a>
                                  <div class="d-flex justify-content-start flex-column">
@@ -92,17 +92,23 @@
                                                         <div class="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-800 menu-state-bg-light-primary fw-semibold w-200px py-3" data-kt-menu="true" style="">
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                        <a href="/Books/Edit/${row.id}" class="menu-link px-3 js-render-modal">
+                                                        <a href="/Books/Edit/${row.id}" class="menu-link px-3">
                                                         Edit
+                                                        </a>
+                                                        </div>
+                                                        <div class="menu-item px-3">
+                                                        <a href="/Books/Details/${row.id}" class="menu-link flex-stack px-3">
+                                                        Details
                                                         </a>
                                                         </div>
                                                         <!--end::Menu item-->
                                                         <!--begin::Menu item-->
                                                         <div class="menu-item px-3">
-                                                                <a href="javascript:;" data-id="${row.id}" class="menu-link flex-stack px-3 js-toggle-delete">
+                                                        <a href="javascript:;" data-id="${row.id}" class="menu-link flex-stack px-3 js-toggle-delete">
                                                         Delete
                                                         </a>
                                                         </div>
+                                                         
                                                         <!--end::Menu item-->
                                                         </div>`;
                 }

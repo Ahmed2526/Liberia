@@ -67,7 +67,7 @@ function onModalSuccess(item) {
 
     //Check if Add or Edit and handle it
     if (updatedRow === undefined) {
-        $('tbody').append(item);
+        $('tbody').prepend(item);
     }
     else {
         $(updatedRow).replaceWith(item);

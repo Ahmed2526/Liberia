@@ -17,8 +17,6 @@ namespace Liberia.Data
             base.OnModelCreating(builder);
 
 
-
-
             base.OnModelCreating(builder);
         }
 
@@ -26,6 +24,7 @@ namespace Liberia.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookCategory> BooksCategories { get; set; }
+        public DbSet<BookCopy> BookCopies { get; set; }
 
     }
 }

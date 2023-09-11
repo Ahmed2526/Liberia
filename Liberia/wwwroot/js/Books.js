@@ -29,7 +29,7 @@
                     return `<div class="d-flex align-items-center">
                                  <a href="/Books/Details/${row.id}">
                                    <div class="symbol symbol-50px me-3">
-                                      <img src="${row.imageName}" alt="">
+                                      <img src="${row.thumbNail}" alt="">
                                    </div>
                                 </a>
                                  <div class="d-flex justify-content-start flex-column">
@@ -125,7 +125,7 @@
     });
     //End Search Button
 
-    //Delete Action
+    //Delete Action For Books
     $('body').delegate('.js-toggle-delete', 'click', function () {
 
         let Book = $(this);
@@ -172,5 +172,7 @@
             }
         });
     });
+
+
 
 });

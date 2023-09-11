@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
 using BLL.ICustomService;
-using DAL.Models;
 using DAL.Models.BaseModels;
 using Liberia.Data;
-using Liberia.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
@@ -67,6 +65,7 @@ namespace Liberia.Controllers
                 .Include(e => e.Author)
                 .Include(e => e.Categories)
                 .ThenInclude(e => e.Category)
+                .Include(e => e.BookCopies)
                 .FirstOrDefault(e => e.Id == Id);
 
             if (book is null)
@@ -188,7 +187,7 @@ namespace Liberia.Controllers
             //Handle Image
             if (vm.ImageUrl is not null)
             {
-                var UpdatedImg = _imageService.UpdateImages(vm.ImageUrl, selected.ImageName, selected.ThumbNail);
+                var UpdatedImg = _imageService.UpdateImagesV2(vm.ImageUrl, selected.ImageName, selected.ThumbNail);
                 if (UpdatedImg is not null)
                 {
                     var CheckOgImgExist = UpdatedImg.TryGetValue("OriginalImg", out string? OriginalImg);

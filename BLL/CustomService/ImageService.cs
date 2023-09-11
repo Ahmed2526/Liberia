@@ -1,13 +1,6 @@
 ﻿using BLL.ICustomService;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace BLL.CustomService
@@ -43,11 +36,11 @@ namespace BLL.CustomService
 
                     //New Names
                     var ImgFileNewName = Guid.NewGuid() + Path.GetExtension(ImgFile.FileName);
-                    var thumbNailName = "thumb-" + Guid.NewGuid() + Path.GetExtension(ImgFile.FileName);
+                    var thumbNailName = Guid.NewGuid() + Path.GetExtension(ImgFile.FileName);
 
                     //Generating Paths
-                    var ImgFilePath = Path.Combine($"{_webHostEnvironment.WebRootPath}/Images/Books", ImgFileNewName);
-                    var thumbNailPath = Path.Combine($"{_webHostEnvironment.WebRootPath}/Images/Books/Thumbnails", thumbNailName);
+                    var ImgFilePath = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/Books", ImgFileNewName);
+                    var thumbNailPath = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/Books/thumb", thumbNailName);
 
                     //Physical Copying
                     using var stream = System.IO.File.Create(ImgFilePath);
@@ -63,8 +56,8 @@ namespace BLL.CustomService
 
                     //Return the image and its thumbnail.
                     var dictonary = new Dictionary<string, string>();
-                    dictonary.Add("OriginalImg", ImgFileNewName);
-                    dictonary.Add("Thumbnail", thumbNailName);
+                    dictonary.Add("OriginalImg", $"/images/books/{ImgFileNewName}");
+                    dictonary.Add("Thumbnail", $"/images/books/thumb/{thumbNailName}");
 
                     return dictonary;
                 }
@@ -137,5 +130,69 @@ namespace BLL.CustomService
             return null;
         }
 
+        public Dictionary<string, string> UpdateImagesV2(IFormFile formFile, string OldPhotoName, string Oldthumbnail)
+        {
+            try
+            {
+                if (formFile is not null)
+                {
+                    var idPhotoExtension = AllowedExtensions.Contains(Path.GetExtension(formFile.FileName));
+
+                    //Check Extension
+                    if (!idPhotoExtension)
+                        return null;
+
+                    //Check File Size
+                    if (formFile.Length > MaxAllowedFileSize)
+                        return null;
+
+                    //New Names
+                    var PhotoNewName = Guid.NewGuid() + Path.GetExtension(formFile.FileName);
+                    var ThumbNailNewName = Guid.NewGuid() + Path.GetExtension(formFile.FileName);
+
+                    //Generating Paths
+
+                    var OldPhotoPath = $"{_webHostEnvironment.WebRootPath}{OldPhotoName}";
+
+                    var NewPhotoPath = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/books", PhotoNewName);
+
+                    var OldThumbNailPath = $"{_webHostEnvironment.WebRootPath}{Oldthumbnail}";
+
+                    var NewThumbNailPath = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/books/thumb", ThumbNailNewName);
+
+                    //DeleteOldPhoto 
+                    if (System.IO.File.Exists(OldPhotoPath))
+                        System.IO.File.Delete(OldPhotoPath);
+
+
+                    if (System.IO.File.Exists(OldThumbNailPath))
+                        System.IO.File.Delete(OldThumbNailPath);
+
+
+                    //Physical Copying
+                    using var IdPhotostream = System.IO.File.Create(NewPhotoPath);
+                    formFile.CopyTo(IdPhotostream);
+
+                    //Thumbnail Handeling
+                    using var image = Image.Load(formFile.OpenReadStream());
+                    var ratio = (float)image.Width / 200;
+                    var height = image.Height / ratio;
+                    image.Mutate(i => i.Resize(width: 200, height: (int)height));
+                    image.Save(NewThumbNailPath);
+
+                    //Return the image and its thumbnail.
+                    var dictonary = new Dictionary<string, string>();
+                    dictonary.Add("OriginalImg", $"/images/books/{PhotoNewName}");
+                    dictonary.Add("Thumbnail", $"/images/books/thumb/{ThumbNailNewName}");
+
+                    return dictonary;
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return null;
+        }
     }
 }

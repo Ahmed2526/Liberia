@@ -1,0 +1,23 @@
+﻿@model BookCopyFormVM
+
+<form asp-action="Edit" data-ajax-method="post"
+      data-ajax="true"
+      data-ajax-begin="onModalBegin"
+      data-ajax-success="onModalSuccess"
+      data-ajax-failure="onModalfailure"
+      data-ajax-complete="onModalFinish">
+
+    <div class="form-floating mb-5 col-8">
+        <input type="text" class="form-control" placeholder="Edition Number" asp-for="EditionNumber" />
+        <label asp-for="EditionNumber"></label>
+        <span asp-validation-for="EditionNumber" class="text-danger"></span>
+    </div>
+    <div class="form-check form-switch">
+        <label asp-for="IsAvailableForRental" class="form-check-label"></label>
+        <input type="checkbox" asp-for="IsAvailableForRental" class="form-check-input" />
+        <span asp-validation-for="IsAvailableForRental" class="text-danger"></span>
+    </div>
+    <input type="hidden" class="form-control" placeholder="Edition Number" asp-for="Id" />
+
+    <partial name="_ModalFotter" />
+</form>

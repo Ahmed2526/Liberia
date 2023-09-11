@@ -12,7 +12,7 @@ namespace DAL.ViewModels
         [MinLength(3, ErrorMessage = "Minimum Length is 3 char")]
         [Remote("checkUnique", "Books", AdditionalFields = "Id,AuthorId", ErrorMessage = "Book With Same Title And Author Already Exist!")]
         public string Title { get; set; } = string.Empty;
-        [Display(Name ="Author")]
+        [Display(Name = "Author")]
         [Remote("checkUnique", "Books", AdditionalFields = "Id,Title", ErrorMessage = "Book With Same Title And Author Already Exist!")]
         public int AuthorId { get; set; }
         public IEnumerable<SelectListItem>? Authors { get; set; }

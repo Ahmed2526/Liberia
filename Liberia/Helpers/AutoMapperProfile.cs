@@ -14,6 +14,9 @@ namespace Liberia.Helpers
                 .ForMember(dest => dest.Author, from => from.MapFrom(src => src.Author!.Name))
                 .ForMember(dest => dest.Categories, from => from.MapFrom(src => src.Categories.Select(e => e.Category!.Name)));
 
+            CreateMap<BookCopy, BookCopyVM>()
+               .ForMember(dest => dest.BookTitle, from => from.MapFrom(src => src.Book!.Title));
+
         }
     }
 }

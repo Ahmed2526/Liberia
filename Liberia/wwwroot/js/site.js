@@ -3,7 +3,7 @@
 $(document).ready(function () {
 
     //Disable button and add loading animation.
-    $('form').on('submit', function () {
+    $('form').not('#SignOut').on('submit', function () {
         if ($('#kt_docs_tinymce_basic').length > 0) {
             $('#kt_docs_tinymce_basic').each(function () {
                 var input = $(this);
@@ -51,6 +51,10 @@ $(document).ready(function () {
             }
         });
         modal.modal('show');
+    });
+
+    $('.js-signout').on('click',function () {
+        $('#SignOut').submit();
     });
 });
 //Disable button and add loading animation.

@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
-using BLL.ICustomService;
-using DAL.Models;
 using Liberia.Data;
 using Liberia.Filters;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Liberia.Controllers
 {

@@ -1,7 +1,9 @@
 using BLL.CustomService;
 using BLL.ICustomService;
+using Liberia.Consts;
 using Liberia.Data;
 using Liberia.Helpers;
+using Liberia.Seeds;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -10,7 +12,7 @@ namespace Liberia
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +22,9 @@ namespace Liberia
                 options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultUI().AddDefaultTokenProviders();
 
             builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
 
@@ -52,6 +55,14 @@ namespace Liberia
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            //Seed Roles And Admin Users.
+            var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            await DefaultRoles.SeedRoles(roleManager);
+            await DefaultUsers.SeedAdminUser(UserManager);
 
             app.MapControllerRoute
                 (

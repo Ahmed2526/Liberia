@@ -1,0 +1,37 @@
+﻿@model EditUserVM
+
+<form asp-controller="Users" asp-action="Edit" data-ajax-method="post"
+      data-ajax="true"
+      data-ajax-begin="onModalBegin"
+      data-ajax-success="onModalSuccess"
+      data-ajax-failure="onModalfailure"
+      data-ajax-complete="onModalFinish">
+
+    <div class="form-floating mb-5 col-8">
+        <input type="text" class="form-control form-control-solid" placeholder="Full Name" asp-for="FullName" />
+        <label asp-for="FullName"></label>
+        <span asp-validation-for="FullName" class="text-danger"></span>
+    </div>
+    <input type="hidden" asp-for="UserId" />
+    <div class="form-floating mb-5 col-8">
+        <input type="text" class="form-control form-control-solid" placeholder="Email" asp-for="Email" />
+        <label asp-for="Email"></label>
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-5 col-8">
+        <input type="text" class="form-control form-control-solid" placeholder="Phone" asp-for="PhoneNumber" />
+        <label asp-for="PhoneNumber"></label>
+        <div class="form-text">
+            <span class="d-block">Ex: 01522133555 ,01023411526</span>
+        </div>
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+    <div class="form-floating mb-5 col-8">
+        <select data-control="select2" data-placeholder="Select Roles" class="form-select form-select-solid js-select2" asp-for="Roles" asp-items="@Model.SelectedRoles">
+        </select>
+        <label asp-for="Roles"></label>
+        <span asp-validation-for="Roles" class="text-danger"></span>
+    </div>
+
+    <partial name="_ModalFotter" />
+</form>

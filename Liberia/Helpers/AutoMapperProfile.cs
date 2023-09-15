@@ -17,8 +17,11 @@ namespace Liberia.Helpers
             CreateMap<BookCopy, BookCopyVM>()
                .ForMember(dest => dest.BookTitle, from => from.MapFrom(src => src.Book!.Title));
 
-            CreateMap<ApplicationUser, UserVM>();
-                
+            CreateMap<ApplicationUser, UserVM>()
+                .ForMember(dest => dest.UserId, from => from.MapFrom(src => src.Id));
+
+            CreateMap<UserFormVM, ApplicationUser>()
+            .ForMember(dest => dest.Id, from => from.MapFrom(src => src.UserId));
         }
     }
 }

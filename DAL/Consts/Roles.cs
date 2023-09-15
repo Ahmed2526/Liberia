@@ -1,4 +1,4 @@
-﻿namespace Liberia.Consts
+﻿namespace DAL.Consts
 {
     public static class Roles
     {

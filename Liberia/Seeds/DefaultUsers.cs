@@ -1,4 +1,4 @@
-﻿using Liberia.Consts;
+﻿using DAL.Consts;
 using Microsoft.AspNetCore.Identity;
 
 namespace Liberia.Seeds

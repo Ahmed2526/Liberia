@@ -38,7 +38,7 @@ namespace Liberia.Controllers
 
             var category = new Category
             {
-                Name = vm.Name,
+                Name = vm.Name.Trim(),
                 IsActive = true
             };
 
@@ -73,7 +73,7 @@ namespace Liberia.Controllers
             if (select is null)
                 return NotFound();
 
-            select.Name = vm.Name;
+            select.Name = vm.Name.Trim();
             select.ModifiedOn = DateTime.Now;
 
             _context.Categories.Update(select);

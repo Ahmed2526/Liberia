@@ -22,7 +22,7 @@
                         <span asp-validation-for="Title" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-5">
-                        <select data-control="select2" data-placeholder="Select Author" class="form-select form-select-solid" asp-for="AuthorId" asp-items="@Model.Authors">
+                        <select data-control="select2" data-placeholder="Select Author" class="form-select form-select-solid js-select2" asp-for="AuthorId" asp-items="@Model.Authors">
                             <option value="">Select Author</option>
                         </select>
                         <label asp-for="AuthorId"></label>
@@ -35,7 +35,7 @@
                         <span asp-validation-for="ImageUrl" class="text-danger"></span>
                     </div>
                     <div class="form-floating mb-5">
-                        <select data-control="select2" data-placeholder="Select Categories" class="form-select form-select-solid" asp-for="SelectedCategories" asp-items="@Model.Categories">
+                        <select data-control="select2" data-placeholder="Select Categories" class="form-select form-select-solid js-select2" asp-for="SelectedCategories" asp-items="@Model.Categories">
                         </select>
                         <label asp-for="SelectedCategories"></label>
                         <span asp-validation-for="SelectedCategories" class="text-danger"></span>
@@ -99,4 +99,7 @@
 }
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        applySelect2();
+    </script>
 }

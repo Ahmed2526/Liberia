@@ -1,6 +1,5 @@
 using BLL.CustomService;
 using BLL.ICustomService;
-using Liberia.Consts;
 using Liberia.Data;
 using Liberia.Helpers;
 using Liberia.Seeds;
@@ -23,7 +22,7 @@ namespace Liberia
 
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI().AddDefaultTokenProviders();
 

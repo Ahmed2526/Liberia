@@ -1,16 +1,9 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DAL.ViewModels
+﻿namespace DAL.ViewModels
 {
     public class UserVM
     {
         public string UserId { get; set; } = string.Empty;
-        
+
         [Display(Name = "Full Name")]
         public string FullName { get; set; } = string.Empty;
 
@@ -22,7 +15,8 @@ namespace DAL.ViewModels
 
         public DateTime CreatedOn { get; set; }
 
-        public DateTime ModifiedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+        public bool IsActive { get; set; }
 
         //[Display(Name = "User Role")]
         //public string UserRole { get; set; } = string.Empty;

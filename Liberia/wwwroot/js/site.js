@@ -14,6 +14,22 @@ $(document).ready(function () {
         var isvalid = $(this).valid();
         if (isvalid) disableSubmitButton();
     });
+    // End Disable button.
+
+    //Toggle Password Show/Hide  //Not Working
+    let togglePassword = document.querySelector("#togglePassword");
+    let password = document.querySelector("#password");
+    if ($('#togglePassword').length > 0) {
+        togglePassword.addEventListener("click", function () {
+            // toggle the type attribute
+            const type = password.getAttribute("type") === "password" ? "text" : "password";
+            password.setAttribute("type", type);
+            // toggle the eye icon
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+    //End Password Show/Hide
 
     //TinyMce Start
     if ($('#kt_docs_tinymce_basic').length > 0) {
@@ -45,6 +61,7 @@ $(document).ready(function () {
             success: function (form) {
                 $('.modal-body').html(form);
                 $.validator.unobtrusive.parse(modal);
+                applySelect2();
             },
             error: function () {
                 showErrorMessage();
@@ -53,7 +70,7 @@ $(document).ready(function () {
         modal.modal('show');
     });
 
-    $('.js-signout').on('click',function () {
+    $('.js-signout').on('click', function () {
         $('#SignOut').submit();
     });
 });
@@ -83,8 +100,8 @@ function onModalSuccess(item) {
     KTMenu.initGlobalHandlers();
 }
 
-function onModalfailure() {
-    showErrorMessage();
+function onModalfailure(obj) {
+    showErrorMessage(obj.responseText);
 }
 
 function onModalFinish() {
@@ -94,13 +111,18 @@ function onModalFinish() {
 
 
 
+function applySelect2() {
+    $('.js-select2').select2();
+    $('.js-select2').on('select2:select', function (e) {
+        $('form').not('#SignOut').validate().element('#' + $(this).attr('id'));
+    });
+}
 
-
-function showErrorMessage() {
+function showErrorMessage(data) {
     Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: 'Something went wrong!',
+        text: data === undefined ? 'Something went wrong!' : data,
     })
 }
 function showSuccessMessage() {

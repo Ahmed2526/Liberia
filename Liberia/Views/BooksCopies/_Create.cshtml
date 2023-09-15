@@ -17,7 +17,7 @@
         <input type="checkbox" asp-for="IsAvailableForRental" class="form-check-input" />
         <span asp-validation-for="IsAvailableForRental" class="text-danger"></span>
     </div>
-    <input type="hidden" class="form-control" placeholder="Edition Number" asp-for="BookId" />
+    <input type="hidden" class="form-control" asp-for="BookId" />
 
     <partial name="_ModalFotter" />
 </form>

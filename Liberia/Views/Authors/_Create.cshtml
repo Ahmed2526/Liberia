@@ -6,8 +6,12 @@
       data-ajax-success="onModalSuccess"
       data-ajax-failure="onModalfailure"
       data-ajax-complete="onModalFinish">
-    <input type="text" class="form-control" asp-for="Name" placeholder="Name">
-    <span class="text-danger mb-5" asp-validation-for="Name"></span>
+
+    <div class="form-floating mb-5 col-8">
+        <input type="text" class="form-control form-control-solid" value="" placeholder="Name" asp-for="Name" />
+        <label asp-for="Name"></label>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
 
     <partial name="_ModalFotter" />
 </form>

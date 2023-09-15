@@ -1,4 +1,7 @@
-﻿namespace DAL.ViewModels
+﻿using DAL.Consts;
+using System.Text.RegularExpressions;
+
+namespace DAL.ViewModels
 {
     public class BookCopyFormVM
     {
@@ -6,6 +9,7 @@
         public int BookId { get; set; }
 
         [Display(Name = "Edition Number")]
+        [RegularExpression(RegexPatterns.NumericsonlyPattern, ErrorMessage = Errors.NumbersOnly)]
         public int EditionNumber { get; set; }
 
         [Display(Name = "Is Available For Rental ?")]

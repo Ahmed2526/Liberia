@@ -97,7 +97,7 @@ function onModalSuccess(item) {
 
     //For Re render the newly added item
     KTMenu.init();
-    KTMenu.initGlobalHandlers();
+    //KTMenu.initGlobalHandlers();
 }
 
 function onModalfailure(obj) {
@@ -122,14 +122,15 @@ function showErrorMessage(data) {
     Swal.fire({
         icon: 'error',
         title: 'Oops...',
-        text: data === undefined ? 'Something went wrong!' : data,
+        text: data == undefined ? 'Something went wrong!' : data,
     })
 }
-function showSuccessMessage() {
+function showSuccessMessage(data) {
     Swal.fire(
         'Done!',
-        'Saved Successfully!',
+        data == undefined ? 'Saved Successfully!' : data,
         'success'
     )
 }
+
 

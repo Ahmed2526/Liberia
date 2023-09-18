@@ -10,7 +10,7 @@
 
         public const string NumericsonlyPattern = "^\\d+$";
 
-        public const string EnglishLettersOnlyPattern ="^[a-zA-Z]+$";
+        public const string EnglishLettersOnlyPattern = "^[a-zA-Z]+$";
         public const string EnglishLettersOnlyWithSpacePattern = "^[a-zA-Z ]+$";
 
         public const string EnglishLettersandDotPattern = "^[a-zA-Z. ]+$";

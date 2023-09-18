@@ -12,8 +12,13 @@
         <label asp-for="FullName"></label>
         <span asp-validation-for="FullName" class="text-danger"></span>
     </div>
+    <div class="form-floating mb-5 col-8">
+        <input type="text" class="form-control form-control-solid" value="" placeholder="User Name" asp-for="UserName" autocomplete="off" />
+        <label asp-for="UserName"></label>
+        <span asp-validation-for="UserName" class="text-danger"></span>
+    </div>
      <div class="form-floating mb-5 col-8">
-        <input type="text" class="form-control form-control-solid" value="" placeholder="Email" asp-for="Email" />
+        <input type="text" class="form-control form-control-solid" value="" placeholder="Email" asp-for="Email" autocomplete="off" />
         <label asp-for="Email"></label>
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
@@ -27,7 +32,7 @@
     </div>
 
     <div class="form-floating mb-5 col-8 position-relative">
-        <input type="password" asp-for="Password" class="form-control form-control-solid" id="password" placeholder="Password" />
+        <input type="password" asp-for="Password" class="form-control form-control-solid" id="password" placeholder="Password" autocomplete="off" />
        @* <div class="position-absolute translate-middle-y top-50 end-0 me-3">
             <i class="bi bi-eye-slash-fill fs-1" id="togglePassword" style="cursor: pointer"></i>
         </div>*@
@@ -36,7 +41,7 @@
     </div>
 
     <div class="form-floating mb-5 col-8">
-        <input type="password" class="form-control form-control-solid" value="" placeholder="Confirm Password" asp-for="ConfirmPassword" />
+        <input type="password" class="form-control form-control-solid" value="" placeholder="Confirm Password" asp-for="ConfirmPassword" autocomplete="off" />
         <label asp-for="ConfirmPassword"></label>
         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
     </div>

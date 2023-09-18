@@ -9,8 +9,13 @@ namespace DAL.ViewModels
         public string UserId { get; set; } = null!;
 
         [Display(Name = "Full Name")]
-        [RegularExpression(RegexPatterns.EnglishLettersOnlyWithSpacePattern,ErrorMessage =Errors.EnglishLettersOnly)]
+        [RegularExpression(RegexPatterns.EnglishLettersOnlyWithSpacePattern, ErrorMessage = Errors.EnglishLettersOnly)]
         public string FullName { get; set; } = string.Empty;
+
+        [Display(Name = "User Name")]
+        [Remote("checkUnique", "Users", AdditionalFields = "UserId", ErrorMessage = "UserName already taken")]
+        [RegularExpression(RegexPatterns.EnglishLettersAndNumbersOnlyPattern, ErrorMessage = Errors.EnglishLettersAndNumbers)]
+        public string UserName { get; set; } = string.Empty;
 
         [Required]
         [EmailAddress]

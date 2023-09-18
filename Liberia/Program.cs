@@ -3,6 +3,7 @@ using BLL.ICustomService;
 using Liberia.Data;
 using Liberia.Helpers;
 using Liberia.Seeds;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -26,11 +27,35 @@ namespace Liberia
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultUI().AddDefaultTokenProviders();
 
+            //Configure Lockout
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                // Default Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+            });
+
+            //Cookie Configuration
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.Cookie.Name = "LiberiaCookies";
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = "/Identity/Account/Login";
+                // ReturnUrlParameter requires 
+                //using Microsoft.AspNetCore.Authentication.Cookies;
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                options.SlidingExpiration = true;
+            });
+
+
             builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
 
             //Custom Services
-            builder.Services.AddScoped(typeof(IImageService), typeof(ImageService));
-
+            builder.Services.AddTransient(typeof(IImageService), typeof(ImageService));
+            builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
 
             builder.Services.AddControllersWithViews();
 

@@ -12,13 +12,18 @@ namespace DAL.ViewModels
         [RegularExpression(RegexPatterns.EnglishLettersOnlyWithSpacePattern, ErrorMessage = Errors.EnglishLettersOnly)]
         public string FullName { get; set; } = string.Empty;
 
+        [Display(Name = "User Name")]
+        [Remote("checkUnique", "Users", AdditionalFields = "UserId", ErrorMessage = "UserName already taken")]
+        [RegularExpression(RegexPatterns.EnglishLettersAndNumbersOnlyPattern, ErrorMessage = Errors.EnglishLettersAndNumbers)]
+        public string UserName { get; set; } = string.Empty;
+
         [Required]
         [EmailAddress]
         [Remote("checkUnique", "Users", AdditionalFields = "UserId", ErrorMessage = "Email already registered")]
         [RegularExpression(RegexPatterns.EmailPattern, ErrorMessage = Errors.Email)]
         public string Email { get; set; } = string.Empty;
 
-        [RegularExpression(RegexPatterns.EgyPhonePattern,ErrorMessage =Errors.Phone)]
+        [RegularExpression(RegexPatterns.EgyPhonePattern, ErrorMessage = Errors.Phone)]
         public string PhoneNumber { get; set; } = string.Empty;
 
         [Required]

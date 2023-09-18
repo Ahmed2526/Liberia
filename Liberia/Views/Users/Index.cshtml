@@ -87,12 +87,62 @@
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <script>
-
         $(document).ready(function () {
 
             //StartDataTable//
             var datatable = $('#DataTable').DataTable();
 
+            //Search Button
+            $('#search').on('keyup click', function () {
+                datatable.search($('#search').val()).draw();
+            });
+
+            //Unlock User
+            $('body').delegate('.js-unlockUser', 'click', function () {
+
+                let User = $(this);
+                let Userid = $(this).data('id');
+
+                bootbox.confirm({
+                    title: 'Unlock User',
+                    message: 'Are You Sure You Want To Unlock This User ?',
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-danger'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-secondary'
+                        }
+                    },
+                    callback: function (result) {
+
+                        if (result) {
+                            $.ajax({
+                                url: "/Users/UnlockUser",
+                                data: {
+                                    id: Userid,
+                                    '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                                },
+                                type: "POST",
+                                success: function (ModifiedOn) {
+                                    let data = 'User Unlocked Successfully!';
+                                    showSuccessMessage(data);
+                                    User.parents('tr').find('.js-modified-on').html(ModifiedOn);
+                                },
+                                error: function () {
+                                    showErrorMessage();
+                                }
+                            });
+                        }
+                    }
+                });
+
+
+            });
+
+            //Delete User
             $('body').delegate('.js-toggle-delete', 'click', function () {
 
                 let Author = $(this);
@@ -139,12 +189,7 @@
                     }
                 });
             });
-
-            //Start Search Button
-            $('#search').on('keyup click', function () {
-                datatable.search($('#search').val()).draw();
-            });
-            //End Search Button
+            
         });
     </script>
 }

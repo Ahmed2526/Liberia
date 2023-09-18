@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using DAL.ViewModels;
-using Humanizer;
+using DAL.Consts;
 using Liberia.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +9,7 @@ using System.Security.Claims;
 
 namespace Liberia.Controllers
 {
-    //[Authorize(Roles = Roles.Admin)]
+    [Authorize(Roles = Roles.Admin)]
     public class UsersController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;
@@ -51,7 +51,7 @@ namespace Liberia.Controllers
             user.Id = Guid.NewGuid().ToString();
             user.CreatedOn = DateTime.Now;
             user.IsActive = true;
-            user.UserName = vm.Email;
+            user.UserName = vm.UserName.Trim();
             user.FullName = vm.FullName.Trim();
             user.CreatedById = CurrentuserId;
 
@@ -84,6 +84,7 @@ namespace Liberia.Controllers
             {
                 FullName = selected.FullName,
                 Email = selected.Email,
+                UserName = selected.UserName,
                 PhoneNumber = selected.PhoneNumber,
                 UserId = selected.Id
             };
@@ -114,8 +115,8 @@ namespace Liberia.Controllers
             select.FullName = vm.FullName.Trim();
             select.Email = vm.Email;
             select.NormalizedEmail = vm.Email.ToUpper();
-            select.UserName = vm.Email;
-            select.NormalizedUserName = vm.Email.ToUpper();
+            select.UserName = vm.UserName.Trim();
+            select.NormalizedUserName = vm.UserName.Trim().ToUpper();
             select.PhoneNumber = vm.PhoneNumber;
             select.ModifiedById = CurrentuserId;
             select.ModifiedOn = DateTime.Now;
@@ -193,6 +194,31 @@ namespace Liberia.Controllers
             Selected.ModifiedOn = DateTime.Now;
             Selected.ModifiedById = CurrentuserId;
 
+
+            await _userManager.UpdateAsync(Selected);
+
+            return Ok(Selected.ModifiedOn.ToString());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnlockUser(string id)
+        {
+            var Selected = await _userManager.FindByIdAsync(id);
+
+            if (Selected is null)
+                return NotFound();
+
+            var CurrentuserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var islocked = await _userManager.IsLockedOutAsync(Selected);
+
+            if (islocked)
+                await _userManager.SetLockoutEndDateAsync(Selected, null);
+
+            Selected.ModifiedOn = DateTime.Now;
+            Selected.ModifiedById = CurrentuserId;
+
             await _userManager.UpdateAsync(Selected);
 
             return Ok(Selected.ModifiedOn.ToString());
@@ -200,15 +226,28 @@ namespace Liberia.Controllers
 
         public async Task<IActionResult> checkUnique(UserFormVM vm)
         {
-            var checkEmailExist = await _userManager.FindByEmailAsync(vm.Email);
+            if (!string.IsNullOrEmpty(vm.Email))
+            {
+                var checkEmailExist = await _userManager.FindByEmailAsync(vm.Email);
 
-            if (checkEmailExist is null)
-                return Json(true);
+                if (checkEmailExist is null)
+                    return Json(true);
 
-            else if (vm.UserId == checkEmailExist.Id)
-                return Json(true);
+                else if (vm.UserId == checkEmailExist.Id)
+                    return Json(true);
+            }
+            else if (!string.IsNullOrEmpty(vm.UserName))
+            {
+                var checkuserNameExist = await _userManager.FindByNameAsync(vm.UserName);
 
+                if (checkuserNameExist is null)
+                    return Json(true);
+
+                else if (vm.UserId == checkuserNameExist.Id)
+                    return Json(true);
+            }
             return Json(false);
+
         }
 
         private UserFormVM GenerateInitializedUserFormVM()

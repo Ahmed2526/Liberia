@@ -12,10 +12,11 @@ namespace Liberia.Seeds
             {
                 var adminUser = new ApplicationUser()
                 {
-                    UserName = "admin@gmail.com",
+                    UserName = "Admin22",
                     Email = "admin@gmail.com",
                     FullName = "admin",
                     EmailConfirmed = true,
+                    PhoneNumber = "01551759541",
                     CreatedOn = DateTime.Now,
                     IsActive = true
                 };

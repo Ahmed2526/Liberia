@@ -1,7 +1,10 @@
-﻿using System.Diagnostics;
+﻿using DAL.Consts;
+using Microsoft.AspNetCore.Authorization;
+using System.Diagnostics;
 
 namespace Liberia.Controllers
 {
+    [Authorize(Roles = Roles.Admin)]
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;

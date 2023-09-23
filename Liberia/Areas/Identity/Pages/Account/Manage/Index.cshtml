@@ -1,9 +1,17 @@
 ﻿@page
 @using System.Security.Claims;
+@inject IWebHostEnvironment webhostEnvironment
 @model IndexModel
 @{
     ViewData["Title"] = "Profile";
     Layout = "~/views/shared/_layout.cshtml";
+
+    var avatarUrl = $"{webhostEnvironment.WebRootPath}/images/Users/{User.FindFirstValue(ClaimTypes.NameIdentifier)}.jpg";
+    if (!System.IO.File.Exists(avatarUrl))
+        avatarUrl = "/assets/images/avatar.png";
+
+    else
+        avatarUrl = $"/images/Users/{User.FindFirstValue(ClaimTypes.NameIdentifier)}.jpg";
 }
 
 <div class="content d-flex flex-column flex-column-fluid" id="kt_content">
@@ -25,7 +33,7 @@
                         <!--begin: Pic-->
                         <div class="me-7">
                             <div class="symbol symbol-50px symbol-lg-60px symbol-fixed position-relative">
-                                <img src="~/assets/images/avatar.png" alt="image">
+                                <img src="@avatarUrl" alt="image">
                                 <div class="position-absolute translate-middle bottom-0 start-100 mb-6 bg-success rounded-circle border border-4 border-white h-20px w-20px"></div>
                             </div>
                         </div>
@@ -151,9 +159,7 @@
                     </div>
                     <!--end::Card body-->
                 </div>
-
-                <div class="card tab-pane fade" id="Settings">
-
+                <div class="tab-pane fade" id="Settings">
                     <div class="card mb-5 mb-xl-10">
                         <!--begin::Card header-->
                         <div class="card-header border-0 cursor-pointer" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_profile_details" aria-expanded="true" aria-controls="kt_account_profile_details">
@@ -167,7 +173,7 @@
                         <!--begin::Content-->
                         <div id="kt_account_profile_details" class="collapse show">
                             <!--begin::Form-->
-                            <form class="form fv-plugins-bootstrap5 fv-plugins-framework" method="post">
+                            <form class="form fv-plugins-bootstrap5 fv-plugins-framework" method="post" enctype="multipart/form-data">
                                 <!--begin::Card body-->
                                 <div class="card-body border-top px-9">
                                     <partial name="_StatusMessage" for="StatusMessage" />
@@ -181,7 +187,7 @@
                                             <!--begin::Image input-->
                                             <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(/assets/images/blank.png)">
                                                 <!--begin::Preview existing avatar-->
-                                                <div class="image-input-wrapper w-125px h-125px" style="background-image: url(/assets/images/avatar.png)"></div>
+                                                <div class="image-input-wrapper w-125px h-125px" style="background-image: url(@avatarUrl)"></div>
                                                 <!--end::Preview existing avatar-->
                                                 <!--begin::Label-->
                                                 <label class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" title="" data-bs-original-title="Change avatar">
@@ -268,6 +274,93 @@
                         </div>
                         <!--end::Content-->
                     </div>
+                    <div class="card mb-5 mb-xl-10">
+                        <!--begin::Card header-->
+                        <div class="card-header border-0 cursor-pointer collapsed" role="button" data-bs-toggle="collapse" data-bs-target="#kt_account_signin_method" aria-expanded="false">
+                            <div class="card-title m-0">
+                                <h3 class="fw-bolder m-0">Sign-in Method</h3>
+                            </div>
+                        </div>
+                        <!--end::Card header-->
+                        <!--begin::Content-->
+                        <div id="kt_account_signin_method" class="collapse" style="">
+                            <!--begin::Card body-->
+                            <div class="card-body border-top p-9">
+                                <!--begin::Email Address-->
+                                <div class="d-flex flex-wrap align-items-center">
+                                    <!--begin::Label-->
+                                    <div id="kt_signin_email">
+                                        <div class="fs-6 fw-bolder mb-1">Email Address</div>
+                                        <div class="fw-bold text-gray-600">@User.FindFirstValue(ClaimTypes.Email)</div>
+                                    </div>
+                                    <!--end::Label-->
+                                    <!--begin::Action-->
+                                    <div id="kt_signin_email_button" class="ms-auto">
+                                        <button disabled class="btn btn-light btn-active-light-primary">Change Email</button>
+                                    </div>
+                                    <!--end::Action-->
+                                </div>
+                                <!--end::Email Address-->
+                                <!--begin::Separator-->
+                                <div class="separator separator-dashed my-6"></div>
+                                <!--end::Separator-->
+                                <!--begin::Password-->
+                                <div class="d-flex flex-wrap align-items-center mb-10">
+                                    <!--begin::Label-->
+                                    <div id="kt_signin_password">
+                                        <div class="fs-6 fw-bolder mb-1">Password</div>
+                                        <div class="fw-bold text-gray-600">************</div>
+                                    </div>
+                                    <!--end::Label-->
+                                    <!--begin::Edit-->
+                                    <div id="kt_signin_password_edit" class="flex-row-fluid d-none">
+                                        <!--begin::Form-->
+                                        <form id="kt_signin_change_password" class="form fv-plugins-bootstrap5 fv-plugins-framework" novalidate="novalidate">
+                                            <div class="row mb-1">
+                                                <div class="col-lg-4">
+                                                    <div class="fv-row mb-0 fv-plugins-icon-container">
+                                                        <label for="currentpassword" class="form-label fs-6 fw-bolder mb-3">Current Password</label>
+                                                        <input type="password" class="form-control form-control-lg form-control-solid" name="currentpassword" id="currentpassword">
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="fv-row mb-0 fv-plugins-icon-container">
+                                                        <label for="newpassword" class="form-label fs-6 fw-bolder mb-3">New Password</label>
+                                                        <input type="password" class="form-control form-control-lg form-control-solid" name="newpassword" id="newpassword">
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <div class="fv-row mb-0 fv-plugins-icon-container">
+                                                        <label for="confirmpassword" class="form-label fs-6 fw-bolder mb-3">Confirm New Password</label>
+                                                        <input type="password" class="form-control form-control-lg form-control-solid" name="confirmpassword" id="confirmpassword">
+                                                        <div class="fv-plugins-message-container invalid-feedback"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-text mb-5">Password must be at least 8 character and contain symbols</div>
+                                            <div class="d-flex">
+                                                <button id="kt_password_submit" type="button" class="btn btn-primary me-2 px-6">Update Password</button>
+                                                <button id="kt_password_cancel" type="button" class="btn btn-color-gray-400 btn-active-light-primary px-6">Cancel</button>
+                                            </div>
+                                            <div></div>
+                                        </form>
+                                        <!--end::Form-->
+                                    </div>
+                                    <!--end::Edit-->
+                                    <!--begin::Action-->
+                                    <div id="kt_signin_password_button" class="ms-auto">
+                                        <a class="btn btn-light btn-active-light-primary" asp-page="ChangePassword">Reset Password</a>
+                                    </div>
+                                    <!--end::Action-->
+                                </div>
+                                <!--end::Password-->
+                            </div>
+                            <!--end::Card body-->
+                        </div>
+                        <!--end::Content-->
+                    </div>
                 </div>
                 <!--end::details View-->
             </div>
@@ -277,27 +370,6 @@
     <!--end::Post-->
 </div>
 
-
-@*<h3>@ViewData["Title"]</h3>
-<partial name="_StatusMessage" for="StatusMessage" />
-<div class="row">
-    <div class="col-md-6">
-        <form id="profile-form" method="post">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-floating">
-                <input asp-for="Username" class="form-control" disabled />
-                <label asp-for="Username" class="form-label"></label>
-            </div>
-            <div class="form-floating">
-                <input asp-for="Input.PhoneNumber" class="form-control" />
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
-            </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
-        </form>
-    </div>
-</div>
-*@
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
 }

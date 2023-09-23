@@ -1,10 +1,13 @@
 ﻿using AutoMapper;
+using DAL.Consts;
 using Liberia.Data;
 using Liberia.Filters;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace Liberia.Controllers
 {
+    [Authorize(Roles = Roles.Archive)]
     public class CategoriesController : Controller
     {
         private readonly ApplicationDbContext _context;

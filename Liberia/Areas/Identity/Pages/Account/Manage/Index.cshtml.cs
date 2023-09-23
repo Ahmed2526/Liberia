@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using BLL.ICustomService;
 using DAL.Consts;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -13,13 +14,16 @@ namespace Liberia.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly IImageService _imageService;
 
         public IndexModel(
             UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager)
+            SignInManager<ApplicationUser> signInManager,
+            IImageService imageService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _imageService = imageService;
         }
 
         public string Username { get; set; }
@@ -55,7 +59,7 @@ namespace Liberia.Areas.Identity.Pages.Account.Manage
             Input = new InputModel
             {
                 PhoneNumber = phoneNumber,
-                FullName = user.FullName
+                FullName = user.FullName,
             };
         }
 
@@ -79,6 +83,20 @@ namespace Liberia.Areas.Identity.Pages.Account.Manage
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
 
+            //Handle Avatar.
+            if (Input.Avatar is not null)
+            {
+                var response = _imageService.SaveProfileImage(Input.Avatar, user.Id);
+
+                if (!response.Result)
+                {
+                    StatusMessage = response.Message;
+                    return RedirectToPage();
+                }
+
+                StatusMessage = "Your profile has been updated";
+                return RedirectToPage();
+            }
 
             if (!ModelState.IsValid)
             {
@@ -104,7 +122,7 @@ namespace Liberia.Areas.Identity.Pages.Account.Manage
                 var response = await _userManager.UpdateAsync(user);
                 if (!response.Succeeded)
                 {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
+                    StatusMessage = "Unexpected error when trying to set Full Name.";
                     return RedirectToPage();
                 }
             }

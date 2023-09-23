@@ -1,6 +1,9 @@
 ﻿using BLL.ICustomService;
+using DAL.Consts;
+using DAL.DTO;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using System.IO;
 using Image = SixLabors.ImageSharp.Image;
 
 namespace BLL.CustomService
@@ -193,6 +196,54 @@ namespace BLL.CustomService
                 throw;
             }
             return null;
+        }
+
+        public CommonResponse SaveProfileImage(IFormFile ImgFile, string Userid)
+        {
+            try
+            {
+                if (ImgFile is not null)
+                {
+                    var ImgFileExtension = AllowedExtensions.Contains(Path.GetExtension(ImgFile.FileName));
+
+                    //Check Extension.
+                    if (!ImgFileExtension)
+                        return new CommonResponse() { Result = false, Message = Errors.InvalidExtension };
+
+                    //Check File Size.
+                    if (ImgFile.Length > MaxAllowedFileSize)
+                        return new CommonResponse() { Result = false, Message = Errors.InvalidFileSize };
+
+                    //New Names.
+                    if (string.IsNullOrEmpty(Userid))
+                        return new CommonResponse() { Result = false, Message = Errors.InvalidUserId };
+
+                    var ImgFileNewName = Userid + ".jpg";
+
+                    //Generating Paths
+                    var ImgFilePath = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/Users", ImgFileNewName);
+                    
+                    
+                    //Delete Old
+                    if (File.Exists(ImgFilePath))
+                        File.Delete(ImgFilePath);
+
+
+                    //Physical Copying
+                    using var stream = File.Create(ImgFilePath);
+                    ImgFile.CopyTo(stream);
+                    stream.Dispose();
+
+                    //Return the Response.
+                    return new CommonResponse() { Result = true };
+
+                }
+                return new CommonResponse() { Result = false, Message = Errors.CommonError };
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
     }
 }

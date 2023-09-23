@@ -1,4 +1,13 @@
-﻿<!--begin::Header-->
+﻿@inject IWebHostEnvironment webhostEnvironment
+@{
+    var avatarUrl = $"{webhostEnvironment.WebRootPath}/images/Users/{User.FindFirstValue(ClaimTypes.NameIdentifier)}.jpg";
+    if (!System.IO.File.Exists(avatarUrl))
+        avatarUrl = "/assets/images/avatar.png";
+
+    else
+        avatarUrl = $"/images/Users/{User.FindFirstValue(ClaimTypes.NameIdentifier)}.jpg";
+}
+<!--begin::Header-->
 <div id="kt_header" class="header">
     <!--begin::Container-->
     <div class="container-fluid d-flex flex-stack">
@@ -133,7 +142,7 @@
                     <!--end::Name-->
                     <!--begin::Symbol-->
                     <div class="symbol symbol-30px symbol-md-40px">
-                        <img src="~/assets/images/avatar.png" alt="image" />
+                        <img src="@avatarUrl" alt="image" />
                     </div>
                     <!--end::Symbol-->
                 </div>
@@ -145,13 +154,13 @@
                         <div class="menu-content d-flex align-items-center px-3">
                             <!--begin::Avatar-->
                             <div class="symbol symbol-50px me-5">
-                                <img alt="Logo" src="~/assets/images/avatar.png" />
+                                <img alt="Logo" src="@avatarUrl" />
                             </div>
                             <!--end::Avatar-->
                             <!--begin::Username-->
                             <div class="d-flex flex-column">
                                 <div class="fw-bold d-flex align-items-center fs-5">
-                                    @(User.FindFirst(ClaimTypes.Surname)?.Value ??  User.FindFirst(ClaimTypes.Name)!.Value)
+                                    @(User.FindFirst(ClaimTypes.Surname)?.Value ?? User.FindFirst(ClaimTypes.Name)!.Value)
                                 </div>
                                 <a href="#" class="fw-semibold text-muted text-hover-primary fs-7">@User.FindFirst(ClaimTypes.Email)!.Value</a>
                             </div>

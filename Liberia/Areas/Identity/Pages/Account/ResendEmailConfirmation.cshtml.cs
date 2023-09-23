@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using DAL.Consts;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -18,11 +20,13 @@ namespace Liberia.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public ResendEmailConfirmationModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender, IWebHostEnvironment webHostEnvironment)
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         /// <summary>
@@ -44,6 +48,7 @@ namespace Liberia.Areas.Identity.Pages.Account
             /// </summary>
             [Required]
             [EmailAddress]
+            [RegularExpression(RegexPatterns.EmailPattern, ErrorMessage = Errors.Email)]
             public string Email { get; set; }
         }
 
@@ -61,8 +66,7 @@ namespace Liberia.Areas.Identity.Pages.Account
             var user = await _userManager.FindByEmailAsync(Input.Email);
             if (user == null)
             {
-                ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
-                return Page();
+                return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
             }
 
             var userId = await _userManager.GetUserIdAsync(user);
@@ -72,14 +76,17 @@ namespace Liberia.Areas.Identity.Pages.Account
                 "/Account/ConfirmEmail",
                 pageHandler: null,
                 values: new { userId = userId, code = code },
-                protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                Input.Email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            protocol: Request.Scheme);
 
-            ModelState.AddModelError(string.Empty, "Verification email sent. Please check your email.");
-            return Page();
+            var Filepath = $"{_webHostEnvironment.WebRootPath}/Templetes/Email.html";
+            var str = new StreamReader(Filepath);
+            var body = str.ReadToEnd();
+            str.Close();
+            body = body.Replace("[url]", callbackUrl);
+
+            await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", body);
+
+            return RedirectToPage("RegisterConfirmation", new { email = Input.Email });
         }
     }
 }

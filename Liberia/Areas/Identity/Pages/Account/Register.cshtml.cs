@@ -4,14 +4,12 @@
 
 using DAL.Consts;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
-using System.Text.Encodings.Web;
 
 namespace Liberia.Areas.Identity.Pages.Account
 {
@@ -163,7 +161,7 @@ namespace Liberia.Areas.Identity.Pages.Account
 					body = body.Replace("[url]", callbackUrl);
 
 					await _emailSender.SendEmailAsync(Input.Email, "Confirm your email", body);
-					
+
 					if (_userManager.Options.SignIn.RequireConfirmedAccount)
 					{
 						return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });

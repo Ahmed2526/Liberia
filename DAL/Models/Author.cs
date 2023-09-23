@@ -2,18 +2,18 @@
 
 namespace DAL.Models
 {
-    public class Author : BaseEntity
-    {
+	public class Author : BaseEntity
+	{
 
-        public Author()
-        {
-            Books = new HashSet<Book>();
-        }
+		public Author()
+		{
+			Books = new HashSet<Book>();
+		}
 
-        [MaxLength(100)]
-        public string Name { get; set; } = string.Empty;
+		[MaxLength(100)]
+		public string Name { get; set; } = string.Empty;
 
-        public ICollection<Book> Books { get; set; }
+		public ICollection<Book> Books { get; set; }
 
-    }
+	}
 }

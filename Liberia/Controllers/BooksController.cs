@@ -175,7 +175,24 @@ namespace Liberia.Controllers
 			if (selected is null)
 				return NotFound();
 
-			selected.Title = vm.Title;
+            //Handle Image
+            if (vm.ImageUrl is not null)
+            {
+                var UpdatedImg = _imageService.UpdateImagesV2(vm.ImageUrl, selected.ImageName, selected.ThumbNail);
+                if (UpdatedImg is not null)
+                {
+                    var CheckOgImgExist = UpdatedImg.TryGetValue("OriginalImg", out string? OriginalImg);
+                    var CheckThumbNailExist = UpdatedImg.TryGetValue("Thumbnail", out string? thumbNail);
+
+                    if (!CheckOgImgExist || !CheckThumbNailExist)
+                        ModelState.AddModelError("ImageUrl", "Invalid Photo");
+
+                    selected.ImageName = OriginalImg!;
+                    selected.ThumbNail = thumbNail!;
+                }
+            }
+
+            selected.Title = vm.Title;
 			selected.Publisher = vm.Publisher;
 			selected.PublishingDate = vm.PublishingDate;
 			selected.Hall = vm.Hall;
@@ -183,23 +200,6 @@ namespace Liberia.Controllers
 			selected.Description = vm.Description;
 			selected.AuthorId = vm.AuthorId;
 			selected.ModifiedOn = DateTime.Now;
-
-			//Handle Image
-			if (vm.ImageUrl is not null)
-			{
-				var UpdatedImg = _imageService.UpdateImagesV2(vm.ImageUrl, selected.ImageName, selected.ThumbNail);
-				if (UpdatedImg is not null)
-				{
-					var CheckOgImgExist = UpdatedImg.TryGetValue("OriginalImg", out string? OriginalImg);
-					var CheckThumbNailExist = UpdatedImg.TryGetValue("Thumbnail", out string? thumbNail);
-
-					if (!CheckOgImgExist || !CheckThumbNailExist)
-						ModelState.AddModelError("ImageUrl", "Invalid Photo");
-
-					selected.ImageName = OriginalImg!;
-					selected.ThumbNail = thumbNail!;
-				}
-			}
 
 			//Remove Old Categories
 			var OldCategories = selected.Categories.ToList();
@@ -250,7 +250,6 @@ namespace Liberia.Controllers
 
 			return Json(false);
 		}
-
 
 		private Dictionary<string, string> HandleImage(IFormFile img)
 		{

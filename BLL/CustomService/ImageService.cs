@@ -244,5 +244,76 @@ namespace BLL.CustomService
 				throw;
 			}
 		}
+
+		public CommonResponse SaveProfileImageV2(IFormFile ImgFile, string Userid)
+		{
+			try
+			{
+				if (ImgFile is not null)
+				{
+					var ImgFileExtension = AllowedExtensions.Contains(Path.GetExtension(ImgFile.FileName));
+
+					//Check Extension.
+					if (!ImgFileExtension)
+						return new CommonResponse() { Result = false, Message = Errors.InvalidExtension };
+
+					//Check File Size.
+					if (ImgFile.Length > MaxAllowedFileSize)
+						return new CommonResponse() { Result = false, Message = Errors.InvalidFileSize };
+
+					//New Names.
+					if (string.IsNullOrEmpty(Userid))
+						return new CommonResponse() { Result = false, Message = Errors.InvalidUserId };
+
+					var ImgFileNewName = Userid + ".jpg";
+					var thumbNewName = Userid + ".jpg";
+
+					//Generating Paths
+					var ImgFilePath = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/Users", ImgFileNewName);
+					var thumbPath = Path.Combine($"{_webHostEnvironment.WebRootPath}/images/Users/thumb", thumbNewName);
+
+					//Delete Old
+					if (File.Exists(ImgFilePath))
+						File.Delete(ImgFilePath);
+
+					if (File.Exists(thumbPath))
+						File.Delete(thumbPath);
+
+					//Physical Copying
+					using var stream = File.Create(ImgFilePath);
+					ImgFile.CopyTo(stream);
+					stream.Dispose();
+
+					//Thumbnail Handeling
+					using var image = Image.Load(ImgFile.OpenReadStream());
+					var ratio = (float)image.Width / 200;
+					var height = image.Height / ratio;
+					image.Mutate(i => i.Resize(width: 200, height: (int)height));
+					image.Save(thumbPath);
+
+					//Return the Response.
+					return new CommonResponse() { Result = true };
+
+				}
+				return new CommonResponse() { Result = false, Message = Errors.CommonError };
+			}
+			catch (Exception)
+			{
+				throw;
+			}
+		}
+
+		public string UserProfileImagePath(string id)
+		{
+			var avatarUrl = $"{_webHostEnvironment.WebRootPath}/images/Users/thumb/{id}.jpg";
+			
+			if (!System.IO.File.Exists(avatarUrl))
+				avatarUrl = "/assets/images/avatar.png";
+
+			else
+				avatarUrl = $"/images/Users/thumb/{id}.jpg";
+
+			return avatarUrl;
+		}
 	}
 }

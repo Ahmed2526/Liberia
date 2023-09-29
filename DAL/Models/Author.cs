@@ -4,7 +4,6 @@ namespace DAL.Models
 {
 	public class Author : BaseEntity
 	{
-
 		public Author()
 		{
 			Books = new HashSet<Book>();

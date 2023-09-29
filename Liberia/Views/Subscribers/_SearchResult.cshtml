@@ -1,0 +1,41 @@
+﻿@model SubscriberSearchResultVM
+@inject IWebHostEnvironment webhostEnvironment
+@{
+    string avatarUrl ="";
+    if (Model is not null)
+    {
+        avatarUrl = $"{webhostEnvironment.WebRootPath}/images/Users/thumb/{@Model.Id}.jpg";
+        if (!System.IO.File.Exists(avatarUrl))
+            avatarUrl = "/assets/images/avatar.png";
+
+        else
+            avatarUrl = $"/images/Users/thumb/{@Model.Id}.jpg";
+    }
+
+}
+@if (Model is null)
+{
+    <div class="alert alert-warning pb-2" role="alert">
+        <h4 class="pt-1">No Subscribers Found!</h4>
+    </div>
+}
+
+else
+{
+    <div class="d-flex mt-10 justify-content-between align-items-start flex-wrap">
+        <div class="d-flex align-items-center">
+            <a href="/Subscribers/Details/@Model.Id">
+                <div class="symbol symbol-50px me-3">
+                    <img src="@avatarUrl" alt="">
+                </div>
+            </a>
+            <div class="d-flex justify-content-start flex-column">
+                <a class="text-gray-800 fw-bold mb-1 fs-6">@Model.FullName</a>
+                <span class="text-gray-400 fw-semibold d-block fs-7">@Model.Email</span>
+            </div>
+        </div>
+        <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary font-weight-bold">
+            Details
+        </a>
+    </div>
+}

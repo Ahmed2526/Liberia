@@ -1,0 +1,258 @@
+﻿@model SubscriberFormVM
+
+@{
+    ViewData["Title"] = "Subscribers";
+}
+
+<div class="card card-custom">
+    <div class="card-header ps-3">
+        <div class="card-title">
+            <h3 class="card-label ms-5 fs-3">Edit Subscriber</h3>
+        </div>
+    </div>
+    <div class="card-body">
+        <form asp-controller="Subscribers" asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="@Model.Id" />
+            <!--begin::Card body-->
+            <div class="card-body p-9">
+                <!--begin::Input group-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">Avatar</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8">
+                        <!--begin::Image input-->
+                        <div class="image-input image-input-outline" data-kt-image-input="true" style="background-image: url(/assets/images/blank.png)">
+                            <!--begin::Preview existing avatar-->
+                            <div class="image-input-wrapper w-125px h-125px" style="background-image: url(@Model.ProfilePath)"></div>
+                            <!--end::Preview existing avatar-->
+                            <!--begin::Label-->
+                            <label asp-for="ProfilePhoto" class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="change" data-bs-toggle="tooltip" data-bs-original-title="Change avatar">
+                                <i class="bi bi-pencil-fill fs-7"></i>
+                                <!--begin::Inputs-->
+                                <input asp-for="ProfilePhoto" type="file" accept=".png, .jpg, .jpeg">
+                                <input type="hidden" name="avatar_remove">
+                                <!--end::Inputs-->
+                            </label>
+                            <!--end::Label-->
+                            <!--begin::Cancel-->
+                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="cancel" data-bs-toggle="tooltip" data-bs-original-title="Cancel avatar">
+                                <i class="bi bi-x fs-2"></i>
+                            </span>
+                            <!--end::Cancel-->
+                            <!--begin::Remove-->
+                            <span class="btn btn-icon btn-circle btn-active-color-primary w-25px h-25px bg-body shadow" data-kt-image-input-action="remove" data-bs-toggle="tooltip" data-bs-original-title="Remove avatar">
+                                <i class="bi bi-x fs-2"></i>
+                            </span>
+                            <!--end::Remove-->
+                        </div>
+                        <!--end::Image input-->
+                        <!--begin::Hint-->
+                        <div class="form-text">Allowed file types: png, jpg, jpeg and cannot be more than 2MB</div>
+                        <span asp-validation-for="ProfilePhoto" class="fv-plugins-message-container invalid-feedback"></span>
+                        <!--end::Hint-->
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+                <!--begin::Input group-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Full Name</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8">
+                        <!--begin::Row-->
+                        <div class="row">
+                            <!--begin::Col-->
+                            <div class="col-lg-6 fv-row fv-plugins-icon-container">
+                                <input type="text" asp-for="FirstName" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="First name">
+                                <span asp-validation-for="FirstName" class="fv-plugins-message-container invalid-feedback"></span>
+                            </div>
+                            <!--end::Col-->
+                            <!--begin::Col-->
+                            <div class="col-lg-6 fv-row fv-plugins-icon-container">
+                                <input type="text" asp-for="LastName" class="form-control form-control-lg form-control-solid" placeholder="Last name">
+                                <span asp-validation-for="LastName" class="fv-plugins-message-container invalid-feedback"></span>
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Row-->
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+                <!--begin::Input group-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label asp-for="DateOfBirth" class="col-lg-4 col-form-label required fw-bold fs-6"></label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8 fv-row fv-plugins-icon-container">
+                        <input type="date" min="1900-01-01" max="@DateTime.Now" asp-for="DateOfBirth" class="form-control form-control-lg form-control-solid" placeholder="Date of Birth">
+                        <span asp-validation-for="DateOfBirth" class="fv-plugins-message-container invalid-feedback"></span>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--end::Input group-->
+                <div class="row mb-7">
+                    <!--begin::Label-->
+                    <label asp-for="NationalId" class="col-lg-4 col-form-label required fw-bold fs-6"></label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8 fv-row fv-plugins-icon-container">
+                        <input type="text" asp-for="NationalId" readonly class="form-control form-control-lg form-control-solid" placeholder="National ID">
+                        <span asp-validation-for="NationalId" class="fv-plugins-message-container invalid-feedback"></span>
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--begin::Input group-->
+                <div class="row mb-9">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Contacts</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8">
+                        <!--begin::Row-->
+                        <div class="row d-flex align-items-center ">
+                            <!--begin::Col-->
+                            <div class="col-lg-5 fv-row fv-plugins-icon-container">
+                                <input type="text" asp-for="Email" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Email">
+                                <span asp-validation-for="Email" class="fv-plugins-message-container invalid-feedback"></span>
+                            </div>
+                            <!--end::Col-->
+                            <!--begin::Col-->
+                            <div class="col-lg-5 fv-row fv-plugins-icon-container">
+                                <input type="text" asp-for="PhoneNumber" class="form-control form-control-lg form-control-solid" placeholder="Mobile Number">
+                                <span asp-validation-for="PhoneNumber" class="fv-plugins-message-container invalid-feedback"></span>
+                            </div>
+                            <div class="col-lg-2 form-check ">
+                                <label class="form-check-label" asp-for="HasWhatsApp"></label>
+                                <input type="checkbox" asp-for="HasWhatsApp" class="form-check-input">
+                                <span asp-validation-for="HasWhatsApp" class="fv-plugins-message-container invalid-feedback"></span>
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Row-->
+                    </div>
+                    <!--end::Col-->
+                </div>
+                <!--begin::Input group-->
+                <div class="row mb-9">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label fw-bold fs-6">
+                        <span class="required">Governorate/Area</span>
+                    </label>
+                    <div class="col-lg-8">
+                        <!--begin::Row-->
+                        <div class="row d-flex align-items-center ">
+                            <!--begin::Col-->
+                            <div class="col-lg-6 form-floating">
+                                <select data-control="select2" data-placeholder="Select Governorate" class="form-select form-select-solid js-select2" asp-for="GovernorateId" asp-items="@Model.Governorate">
+                                    <option value="">Select Governorate</option>
+                                </select>
+                                <label asp-for="GovernorateId"></label>
+                                <span asp-validation-for="GovernorateId" class="text-danger"></span>
+                            </div>
+                            <!--end::Col-->
+                            <!--begin::Col-->
+                            <div class="col-lg-6 form-floating">
+                                <select data-control="select2" data-placeholder="Select Area" class="form-select form-select-solid js-select2" asp-for="AreaId" asp-items="@Model.Area">
+                                    <option value="">Select Area</option>
+                                </select>
+                                <label asp-for="AreaId"></label>
+                                <span asp-validation-for="AreaId" class="text-danger"></span>
+                            </div>
+                            <!--end::Col-->
+                        </div>
+                    </div>
+
+                    <!--end::Input group-->
+                </div>
+                <!--end::Card body-->
+                <div class="row mb-6">
+                    <!--begin::Label-->
+                    <label class="col-lg-4 col-form-label required fw-bold fs-6">Address</label>
+                    <!--end::Label-->
+                    <!--begin::Col-->
+                    <div class="col-lg-8">
+                        <!--begin::Row-->
+                        <div class="row d-flex align-items-center ">
+                            <!--begin::Col-->
+                            <div class="col-lg-8 fv-row fv-plugins-icon-container">
+                                <input type="text" asp-for="Address" class="form-control form-control-lg form-control-solid mb-3 mb-lg-0" placeholder="Detailed Address">
+                                <span asp-validation-for="Address" class="fv-plugins-message-container invalid-feedback"></span>
+                            </div>
+                            <!--end::Col-->
+                            <!--begin::Col-->
+                            <div class="col-lg-4 fv-row fv-plugins-icon-container">
+                                <input type="text" asp-for="ZipCode" class="form-control form-control-lg form-control-solid" placeholder="Postal Code">
+                                <span asp-validation-for="ZipCode" class="fv-plugins-message-container invalid-feedback"></span>
+                            </div>
+
+                            <!--end::Col-->
+                        </div>
+                        <!--end::Row-->
+                    </div>
+                    <!--end::Col-->
+                </div>
+
+                <!--begin::Actions-->
+                <div class="card-footer d-flex justify-content-end py-6 px-9">
+                    <a asp-action="Index" class="btn btn-light btn-active-light-primary me-2">Discard</a>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="indicator-label">Save Changes</span>
+                        <span class="indicator-progress">
+                            Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                    </button>
+                </div>
+                <!--end::Actions-->
+        </form>
+        <!--end::Form-->
+    </div>
+</div>
+
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        $(document).ready(function () {
+
+            //select2
+            applySelect2();
+            //End
+
+            //Evaluate Areas
+            $('#GovernorateId').on('change', function () {
+
+                var governorateId = $(this).val();
+                var arealst = $('#AreaId');
+
+                $.ajax({
+                    url: "/Subscribers/GetAreas",
+                    data: {
+                        id: governorateId
+                    },
+                    type: "POST",
+                    success: function (Areas) {
+                        arealst.empty();
+                        arealst.append('<option></option>');
+                        $.each(Areas, function (i, area) {
+                            var item = $('<option></option>').attr("value", area.value).text(area.text);
+                            arealst.append(item);
+                        });
+                    },
+                    error: function () {
+
+                    }
+                });
+
+            });
+            //End
+
+        });
+    </script>
+}

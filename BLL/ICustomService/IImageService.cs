@@ -7,9 +7,9 @@ namespace BLL.ICustomService
 	{
 		Dictionary<string, string> SaveImages(IFormFile formFile);
 		CommonResponse SaveProfileImage(IFormFile formFile, string id);
+		CommonResponse SaveProfileImageV2(IFormFile formFile, string id);
 		Dictionary<string, string> UpdateImagesV2(IFormFile formFile, string OldPhoto, string OldThumb);
-
-
+		string UserProfileImagePath(string id);
 		//For Old Photos
 		Dictionary<string, string> UpdateImages(IFormFile formFile, string OldPhoto, string OldThumb);
 	}

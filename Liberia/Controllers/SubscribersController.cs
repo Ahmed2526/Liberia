@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Security.Claims;
 
 namespace Liberia.Controllers
 {
@@ -66,7 +67,18 @@ namespace Liberia.Controllers
             NewSubscriber.LastName = subscriberForm.LastName.Trim();
             NewSubscriber.IsActive = true;
 
-            _context.Add(NewSubscriber);
+            //Handle Subsciption
+            var createdby = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var subscription = new Subscription()
+            {
+                StartDate = DateTime.Today,
+                EndDate = DateTime.Today.AddYears(1),
+                CreatedOn = DateTime.Now,
+                CreatedById = createdby,
+                SubscriberId = NewSubscriber.Id
+            };
+
+            _context.AddRange(NewSubscriber, subscription);
             _context.SaveChanges();
 
             //Verify Email by message.
@@ -155,7 +167,10 @@ namespace Liberia.Controllers
 
         public IActionResult Details(string Id)
         {
-            var subscriber = _context.Subscribers.Find(Id);
+            var subscriber = _context.Subscribers.Where(e => e.Id == Id)
+                .Include(e => e.Area)
+                .Include(e => e.Governorate)
+                .Include(e => e.Subscriptions).FirstOrDefault();
 
             if (subscriber is null)
                 return NotFound();
@@ -176,8 +191,9 @@ namespace Liberia.Controllers
                 JoinedOn = subscriber.CreatedOn
             };
             subvm.ProfilePhoto = _imageService.UserProfileImagePath(subscriber.Id);
-            subvm.Area = _context.Areas.Find(subscriber.AreaId).NameEn;
-            subvm.Governorate = _context.Governorates.Find(subscriber.GovernorateId).NameEn;
+            subvm.Area = subscriber.Area!.NameEn;
+            subvm.Governorate = subscriber.Governorate!.NameEn;
+            subvm.Subscriptions = subscriber.Subscriptions;
 
             return View(subvm);
         }
@@ -197,6 +213,64 @@ namespace Liberia.Controllers
                 }).OrderBy(e => e.Text).ToList();
 
             return Ok(Arealst);
+        }
+
+        [AjaxOnly]
+        [ValidateAntiForgeryToken]
+        public IActionResult RenewSubscription(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                return NotFound();
+
+            var subscriper = _context.Subscribers
+                .Where(e => e.Id == id && !e.IsBlocked)
+                .Include(e => e.Subscriptions)
+                .FirstOrDefault();
+
+            if (subscriper is null)
+                return NotFound();
+
+            //Max Active subscriptions allowed are 2
+            var maxSub = subscriper.Subscriptions
+                .Where(e => e.EndDate > DateTime.Today)
+                .Count();
+
+            if (maxSub >= 2)
+                return BadRequest();
+
+            var Lastsubscription = subscriper.Subscriptions.LastOrDefault();
+
+            if (Lastsubscription is null || Lastsubscription.EndDate < DateTime.Today)
+            {
+                var newSub = new Subscription()
+                {
+                    StartDate = DateTime.Today,
+                    EndDate = DateTime.Today.AddYears(1),
+                    CreatedOn = DateTime.Now,
+                    SubscriberId = subscriper.Id,
+                    CreatedById = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                };
+                _context.Add(newSub);
+                _context.SaveChanges();
+                return PartialView("_subRow", newSub);
+            }
+
+            else
+            {
+                var newSubscription = new Subscription()
+                {
+                    StartDate = Lastsubscription!.EndDate.AddMinutes(1),
+                    EndDate = Lastsubscription!.EndDate.AddYears(1),
+                    CreatedOn = DateTime.Now,
+                    SubscriberId = subscriper.Id,
+                    CreatedById = User.FindFirstValue(ClaimTypes.NameIdentifier)
+                };
+
+                _context.Add(newSubscription);
+                _context.SaveChanges();
+
+                return PartialView("_subRow", newSubscription);
+            }
         }
 
         //Check Unique Values.

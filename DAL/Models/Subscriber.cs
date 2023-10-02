@@ -52,5 +52,7 @@ namespace DAL.Models
 
         public bool IsBlocked { get; set; }
 
+        public ICollection<Subscription> Subscriptions { get; set; }
+
     }
 }

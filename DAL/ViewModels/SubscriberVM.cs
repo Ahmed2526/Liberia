@@ -24,5 +24,6 @@ namespace DAL.ViewModels
         public string ZipCode { get; set; } 
         public string Address { get; set; } 
         public bool IsBlocked { get; set; }
+        public IEnumerable<Subscription> Subscriptions { get; set; }
     }
 }

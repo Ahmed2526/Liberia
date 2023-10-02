@@ -22,7 +22,7 @@
                     <a class="fs-3 text-gray-800 text-hover-primary fw-bolder mb-1">@Model.FirstName @Model.LastName</a>
                     <!--end::Name-->
                     <!--begin::Position-->
-                    <div class="fs-7 mt-2 badge badge-light-@(Model.IsBlocked ? "danger":"success") d-inline">@(Model.IsBlocked ? "Black listed Subscriber" : "Active Subscriber")</div>
+                    <div class="fs-7 mt-2 badge badge-light-@(Model.IsBlocked ? "danger":"success") d-inline">@(Model.IsBlocked ? "Blocked Subscriber" : "Active Subscriber")</div>
                     @*<div class="fs-5 fw-bold text-muted mb-6">Subscriber</div>*@
                     <!--end::Position-->
                 </div>
@@ -142,29 +142,26 @@
                     <div class="card-header border-0">
                         <!--begin::Card title-->
                         <div class="card-title">
-                            <h2>Invoices</h2>
+                            <h2>Renewal History</h2>
                         </div>
                         <!--end::Card title-->
-                        <!--begin::Toolbar-->
-                        <div class="card-toolbar m-0">
-                            <!--begin::Tab nav-->
-                            <ul class="nav nav-stretch fs-5 fw-bold nav-line-tabs nav-line-tabs-2x border-transparent" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a id="kt_referrals_year_tab" class="nav-link text-active-primary active" data-bs-toggle="tab" role="tab" href="#kt_customer_details_invoices_1">This Year</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a id="kt_referrals_2019_tab" class="nav-link text-active-primary ms-3" data-bs-toggle="tab" role="tab" href="#kt_customer_details_invoices_2">2020</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a id="kt_referrals_2018_tab" class="nav-link text-active-primary ms-3" data-bs-toggle="tab" role="tab" href="#kt_customer_details_invoices_3">2019</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a id="kt_referrals_2017_tab" class="nav-link text-active-primary ms-3" data-bs-toggle="tab" role="tab" href="#kt_customer_details_invoices_4">2018</a>
-                                </li>
-                            </ul>
-                            <!--end::Tab nav-->
-                        </div>
-                        <!--end::Toolbar-->
+                        @if (!Model.IsBlocked)
+                        {
+                            <div class="card-toolbar">
+                                <a href="javascript:;" data-id="@Model.Id" class="btn btn-md btn-flex btn-light-primary js-renew">
+                                    <span class="svg-icon svg-icon-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512">
+                                            <style>
+                                                svg {
+                                                    fill: #467fa0
+                                                }</style>
+                                            <path d="M142.9 142.9c62.2-62.2 162.7-62.5 225.3-1L327 183c-6.9 6.9-8.9 17.2-5.2 26.2s12.5 14.8 22.2 14.8H463.5c0 0 0 0 0 0H472c13.3 0 24-10.7 24-24V72c0-9.7-5.8-18.5-14.8-22.2s-19.3-1.7-26.2 5.2L413.4 96.6c-87.6-86.5-228.7-86.2-315.8 1C73.2 122 55.6 150.7 44.8 181.4c-5.9 16.7 2.9 34.9 19.5 40.8s34.9-2.9 40.8-19.5c7.7-21.8 20.2-42.3 37.8-59.8zM16 312v7.6 .7V440c0 9.7 5.8 18.5 14.8 22.2s19.3 1.7 26.2-5.2l41.6-41.6c87.6 86.5 228.7 86.2 315.8-1c24.4-24.4 42.1-53.1 52.9-83.7c5.9-16.7-2.9-34.9-19.5-40.8s-34.9 2.9-40.8 19.5c-7.7 21.8-20.2 42.3-37.8 59.8c-62.2 62.2-162.7 62.5-225.3 1L185 329c6.9-6.9 8.9-17.2 5.2-26.2s-12.5-14.8-22.2-14.8H48.4h-.7H40c-13.3 0-24 10.7-24 24z" />
+                                        </svg>
+                                    </span>
+                                    Renew
+                                </a>
+                            </div>
+                        }
                     </div>
                     <!--end::Card header-->
                     <!--begin::Card body-->
@@ -179,85 +176,44 @@
                                         <table id="kt_customer_details_invoices_table_1" class="table align-middle table-row-dashed fs-6 fw-bolder gy-5 dataTable no-footer">
                                             <!--begin::Thead-->
                                             <thead class="border-bottom border-gray-200 fs-7 text-uppercase fw-bolder">
-                                                <tr class="text-start text-muted gs-0"><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_1" rowspan="1" colspan="1" aria-label="Order ID: activate to sort column ascending" style="width: 100px;">Order ID</th><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_1" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 100px;">Amount</th><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_1" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 100px;">Status</th><th class="min-w-125px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_1" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 125px;">Date</th><th class="min-w-100px text-end pe-7 sorting_disabled" rowspan="1" colspan="1" aria-label="Invoice" style="width: 100px;">Invoice</th></tr>
+                                                <tr class="text-start text-muted gs-0">
+                                                    <th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_1" rowspan="1" colspan="1" aria-label="Order ID: activate to sort column ascending" style="width: 100px;">Start Date</th>
+                                                    <th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_1" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 100px;">End Date</th>
+                                                    <th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_1" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 100px;">Status</th>
+                                                    <th class="min-w-125px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_1" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 125px;">Add On</th>
                                             </thead>
                                             <!--end::Thead-->
                                             <!--begin::Tbody-->
-                                            <tbody class="fs-6 fw-bold text-gray-600">
-
-
-
-
-
-
-
-
-
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-danger">Rejected</span>
-                                                    </td>
-                                                    <td>Nov 01, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">423445721</a>
-                                                    </td>
-                                                    <td class="text-danger">$-2.60</td>
-                                                    <td>
-                                                        <span class="badge badge-light-danger">Rejected</span>
-                                                    </td>
-                                                    <td>Oct 24, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td class="text-success">$76.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-danger">Rejected</span>
-                                                    </td>
-                                                    <td>Oct 08, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td class="text-success">$5.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-info">In progress</span>
-                                                    </td>
-                                                    <td>Sep 15, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">523445943</a>
-                                                    </td>
-                                                    <td class="text-danger">$-1.30</td>
-                                                    <td>
-                                                        <span class="badge badge-light-info">In progress</span>
-                                                    </td>
-                                                    <td>May 30, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
+                                            <tbody id="Subscriptiontb" class="fs-6 fw-bold text-gray-600">
+                                                @foreach (var item in Model.Subscriptions)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @item.StartDate.ToString("dd-MMM-yyyy")
+                                                        </td>
+                                                        <td>
+                                                            @item.EndDate.ToString("dd-MMM-yyyy")
+                                                        </td>
+                                                        <td>
+                                                            @if (Model.IsBlocked)
+                                                            {
+                                                                <span class="badge badge-light-warning">Not Available</span>
+                                                            }
+                                                            else
+                                                            {
+                                                                if (!(item.StartDate > DateTime.Today.AddYears(1)))
+                                                                {
+                                                                    <span class="badge badge-light-@(DateTime.Today < item.EndDate ? "success" : "danger")">
+                                                                        @(DateTime.Today < item.EndDate ? "Active" : "Expired")
+                                                                    </span>
+                                                                }
+                                                            }
+                                                        </td>
+                                                        <td>
+                                                            @item.CreatedOn
+                                                        </td>
+                                                    </tr>
+                                                }
                                             </tbody>
                                             <!--end::Tbody-->
                                         </table>
@@ -267,290 +223,6 @@
                             </div>
                             <!--end::Tab panel-->
                             <!--begin::Tab panel-->
-                            <div id="kt_customer_details_invoices_2" class="py-0 tab-pane fade" role="tabpanel">
-                                <!--begin::Table-->
-                                <div id="kt_customer_details_invoices_table_2_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                    <div class="table-responsive">
-                                        <table id="kt_customer_details_invoices_table_2" class="table align-middle table-row-dashed fs-6 fw-bolder gy-5 dataTable no-footer">
-                                            <!--begin::Thead-->
-                                            <thead class="border-bottom border-gray-200 fs-7 text-uppercase fw-bolder">
-                                                <tr class="text-start text-muted gs-0"><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_2" rowspan="1" colspan="1" aria-label="Order ID: activate to sort column ascending" style="width: 0px;">Order ID</th><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_2" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 0px;">Amount</th><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_2" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 0px;">Status</th><th class="min-w-125px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_2" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 0px;">Date</th><th class="min-w-100px text-end pe-7 sorting_disabled" rowspan="1" colspan="1" aria-label="Invoice" style="width: 0px;">Invoice</th></tr>
-                                            </thead>
-                                            <!--end::Thead-->
-                                            <!--begin::Tbody-->
-                                            <tbody class="fs-6 fw-bold text-gray-600">
-
-
-
-
-
-
-
-
-
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">523445943</a>
-                                                    </td>
-                                                    <td class="text-danger">$-1.30</td>
-                                                    <td>
-                                                        <span class="badge badge-light-info">In progress</span>
-                                                    </td>
-                                                    <td>May 30, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">231445943</a>
-                                                    </td>
-                                                    <td class="text-success">$204.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-info">In progress</span>
-                                                    </td>
-                                                    <td>Apr 22, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">426445943</a>
-                                                    </td>
-                                                    <td class="text-success">$31.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-warning">Pending</span>
-                                                    </td>
-                                                    <td>Feb 09, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">984445943</a>
-                                                    </td>
-                                                    <td class="text-success">$52.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-success">Approved</span>
-                                                    </td>
-                                                    <td>Nov 01, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">324442313</a>
-                                                    </td>
-                                                    <td class="text-danger">$-0.80</td>
-                                                    <td>
-                                                        <span class="badge badge-light-info">In progress</span>
-                                                    </td>
-                                                    <td>Jan 04, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <!--end::Tbody-->
-                                        </table>
-                                    </div><div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"><div class="dataTables_paginate paging_simple_numbers" id="kt_customer_details_invoices_table_2_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="kt_customer_details_invoices_table_2_previous"><a href="#" aria-controls="kt_customer_details_invoices_table_2" data-dt-idx="0" tabindex="0" class="page-link"><i class="previous"></i></a></li><li class="paginate_button page-item active"><a href="#" aria-controls="kt_customer_details_invoices_table_2" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="kt_customer_details_invoices_table_2" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item next" id="kt_customer_details_invoices_table_2_next"><a href="#" aria-controls="kt_customer_details_invoices_table_2" data-dt-idx="3" tabindex="0" class="page-link"><i class="next"></i></a></li></ul></div></div></div>
-                                </div>
-                                <!--end::Table-->
-                            </div>
-                            <!--end::Tab panel-->
-                            <!--begin::Tab panel-->
-                            <div id="kt_customer_details_invoices_3" class="py-0 tab-pane fade" role="tabpanel">
-                                <!--begin::Table-->
-                                <div id="kt_customer_details_invoices_table_3_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                    <div class="table-responsive">
-                                        <table id="kt_customer_details_invoices_table_3" class="table align-middle table-row-dashed fs-6 fw-bolder gy-5 dataTable no-footer">
-                                            <!--begin::Thead-->
-                                            <thead class="border-bottom border-gray-200 fs-7 text-uppercase fw-bolder">
-                                                <tr class="text-start text-muted gs-0"><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_3" rowspan="1" colspan="1" aria-label="Order ID: activate to sort column ascending" style="width: 0px;">Order ID</th><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_3" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 0px;">Amount</th><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_3" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 0px;">Status</th><th class="min-w-125px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_3" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 0px;">Date</th><th class="min-w-100px text-end pe-7 sorting_disabled" rowspan="1" colspan="1" aria-label="Invoice" style="width: 0px;">Invoice</th></tr>
-                                            </thead>
-                                            <!--end::Thead-->
-                                            <!--begin::Tbody-->
-                                            <tbody class="fs-6 fw-bold text-gray-600">
-
-
-
-
-
-
-
-
-
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">426445943</a>
-                                                    </td>
-                                                    <td class="text-success">$31.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-info">In progress</span>
-                                                    </td>
-                                                    <td>Feb 09, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">984445943</a>
-                                                    </td>
-                                                    <td class="text-success">$52.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-danger">Rejected</span>
-                                                    </td>
-                                                    <td>Nov 01, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">324442313</a>
-                                                    </td>
-                                                    <td class="text-danger">$-0.80</td>
-                                                    <td>
-                                                        <span class="badge badge-light-danger">Rejected</span>
-                                                    </td>
-                                                    <td>Jan 04, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td class="text-success">$5.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-info">In progress</span>
-                                                    </td>
-                                                    <td>Sep 15, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-info">In progress</span>
-                                                    </td>
-                                                    <td>Nov 01, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <!--end::Tbody-->
-                                        </table>
-                                    </div><div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"><div class="dataTables_paginate paging_simple_numbers" id="kt_customer_details_invoices_table_3_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="kt_customer_details_invoices_table_3_previous"><a href="#" aria-controls="kt_customer_details_invoices_table_3" data-dt-idx="0" tabindex="0" class="page-link"><i class="previous"></i></a></li><li class="paginate_button page-item active"><a href="#" aria-controls="kt_customer_details_invoices_table_3" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="kt_customer_details_invoices_table_3" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item next" id="kt_customer_details_invoices_table_3_next"><a href="#" aria-controls="kt_customer_details_invoices_table_3" data-dt-idx="3" tabindex="0" class="page-link"><i class="next"></i></a></li></ul></div></div></div>
-                                </div>
-                                <!--end::Table-->
-                            </div>
-                            <!--end::Tab panel-->
-                            <!--begin::Tab panel-->
-                            <div id="kt_customer_details_invoices_4" class="py-0 tab-pane fade" role="tabpanel">
-                                <!--begin::Table-->
-                                <div id="kt_customer_details_invoices_table_4_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                    <div class="table-responsive">
-                                        <table id="kt_customer_details_invoices_table_4" class="table align-middle table-row-dashed fs-6 fw-bolder gy-5 dataTable no-footer">
-                                            <!--begin::Thead-->
-                                            <thead class="border-bottom border-gray-200 fs-7 text-uppercase fw-bolder">
-                                                <tr class="text-start text-muted gs-0"><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_4" rowspan="1" colspan="1" aria-label="Order ID: activate to sort column ascending" style="width: 0px;">Order ID</th><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_4" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 0px;">Amount</th><th class="min-w-100px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_4" rowspan="1" colspan="1" aria-label="Status: activate to sort column ascending" style="width: 0px;">Status</th><th class="min-w-125px sorting" tabindex="0" aria-controls="kt_customer_details_invoices_table_4" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 0px;">Date</th><th class="min-w-100px text-end pe-7 sorting_disabled" rowspan="1" colspan="1" aria-label="Invoice" style="width: 0px;">Invoice</th></tr>
-                                            </thead>
-                                            <!--end::Thead-->
-                                            <!--begin::Tbody-->
-                                            <tbody class="fs-6 fw-bold text-gray-600">
-
-
-
-
-
-
-
-
-
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-warning">Pending</span>
-                                                    </td>
-                                                    <td>Nov 01, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">423445721</a>
-                                                    </td>
-                                                    <td class="text-danger">$-2.60</td>
-                                                    <td>
-                                                        <span class="badge badge-light-warning">Pending</span>
-                                                    </td>
-                                                    <td>Oct 24, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-success">Approved</span>
-                                                    </td>
-                                                    <td>Nov 01, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">423445721</a>
-                                                    </td>
-                                                    <td class="text-danger">$-2.60</td>
-                                                    <td>
-                                                        <span class="badge badge-light-danger">Rejected</span>
-                                                    </td>
-                                                    <td>Oct 24, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="Invalid date">
-                                                        <a href="#" class="text-gray-600 text-hover-primary">426445943</a>
-                                                    </td>
-                                                    <td class="text-success">$31.00</td>
-                                                    <td>
-                                                        <span class="badge badge-light-info">In progress</span>
-                                                    </td>
-                                                    <td>Feb 09, 2020</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <!--end::Tbody-->
-                                        </table>
-                                    </div><div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"><div class="dataTables_paginate paging_simple_numbers" id="kt_customer_details_invoices_table_4_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="kt_customer_details_invoices_table_4_previous"><a href="#" aria-controls="kt_customer_details_invoices_table_4" data-dt-idx="0" tabindex="0" class="page-link"><i class="previous"></i></a></li><li class="paginate_button page-item active"><a href="#" aria-controls="kt_customer_details_invoices_table_4" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="kt_customer_details_invoices_table_4" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item next" id="kt_customer_details_invoices_table_4_next"><a href="#" aria-controls="kt_customer_details_invoices_table_4" data-dt-idx="3" tabindex="0" class="page-link"><i class="next"></i></a></li></ul></div></div></div>
-                                </div>
-                                <!--end::Table-->
-                            </div>
-                            <!--end::Tab panel-->
                         </div>
                         <!--end::Tab Content-->
                     </div>
@@ -638,638 +310,10 @@
                         <!--end::Title-->
                         <!--begin::Toolbar-->
                         <div class="card-toolbar">
-                            <!--begin::Tab nav-->
-                            <ul class="nav nav-stretch fs-5 fw-bold nav-line-tabs nav-line-tabs-2x border-transparent" role="tablist">
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-active-primary active" data-bs-toggle="tab" role="tab" href="#kt_customer_view_statement_1">This Year</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-active-primary ms-3" data-bs-toggle="tab" role="tab" href="#kt_customer_view_statement_2">2020</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-active-primary ms-3" data-bs-toggle="tab" role="tab" href="#kt_customer_view_statement_3">2019</a>
-                                </li>
-                                <li class="nav-item" role="presentation">
-                                    <a class="nav-link text-active-primary ms-3" data-bs-toggle="tab" role="tab" href="#kt_customer_view_statement_4">2018</a>
-                                </li>
-                            </ul>
-                            <!--end::Tab nav-->
                         </div>
                         <!--end::Toolbar-->
                     </div>
                     <!--end::Header-->
-                    <!--begin::Card body-->
-                    <div class="card-body pb-5">
-                        <!--begin::Tab Content-->
-                        <div id="kt_customer_view_statement_tab_content" class="tab-content">
-                            <!--begin::Tab panel-->
-                            <div id="kt_customer_view_statement_1" class="py-0 tab-pane fade show active" role="tabpanel">
-                                <!--begin::Table-->
-                                <div id="kt_customer_view_statement_table_1_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                    <div class="table-responsive">
-                                        <table id="kt_customer_view_statement_table_1" class="table align-middle table-row-dashed fs-6 text-gray-600 fw-bold gy-4 dataTable no-footer">
-                                            <!--begin::Table head-->
-                                            <thead class="border-bottom border-gray-200">
-                                                <!--begin::Table row-->
-                                                <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0"><th class="w-125px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_1" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 125px;">Date</th><th class="w-100px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_1" rowspan="1" colspan="1" aria-label="Order ID: activate to sort column ascending" style="width: 100px;">Order ID</th><th class="w-300px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_1" rowspan="1" colspan="1" aria-label="Details: activate to sort column ascending" style="width: 300px;">Details</th><th class="w-100px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_1" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 100px;">Amount</th><th class="w-100px text-end pe-7 sorting_disabled" rowspan="1" colspan="1" aria-label="Invoice" style="width: 100px;">Invoice</th></tr>
-                                                <!--end::Table row-->
-                                            </thead>
-                                            <!--end::Table head-->
-                                            <!--begin::Table body-->
-                                            <tbody>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                <tr class="odd">
-                                                    <td data-order="2021-01-01T00:00:00+03:00">Nov 01, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td>Darknight transparency 36 Icons Pack</td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2021-01-24T00:00:00+03:00">Oct 24, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">423445721</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-2.60</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2021-01-08T00:00:00+03:00">Oct 08, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td>Cartoon Mobile Emoji Phone Pack</td>
-                                                    <td class="text-success">$76.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2021-01-15T00:00:00+03:00">Sep 15, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td>Iphone 12 Pro Mockup Mega Bundle</td>
-                                                    <td class="text-success">$5.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2021-01-30T00:00:00+03:00">May 30, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">523445943</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-1.30</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2021-01-22T00:00:00+03:00">Apr 22, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">231445943</a>
-                                                    </td>
-                                                    <td>Parcel Shipping / Delivery Service App</td>
-                                                    <td class="text-success">$204.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2021-01-09T00:00:00+03:00">Feb 09, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">426445943</a>
-                                                    </td>
-                                                    <td>Visual Design Illustration</td>
-                                                    <td class="text-success">$31.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2021-01-01T00:00:00+03:00">Nov 01, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">984445943</a>
-                                                    </td>
-                                                    <td>Abstract Vusial Pack</td>
-                                                    <td class="text-success">$52.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2021-01-04T00:00:00+03:00">Jan 04, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">324442313</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-0.80</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2021-01-01T00:00:00+03:00">Nov 01, 2021</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td>Darknight transparency 36 Icons Pack</td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <!--end::Table body-->
-                                        </table>
-                                    </div><div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"><div class="dataTables_paginate paging_simple_numbers" id="kt_customer_view_statement_table_1_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="kt_customer_view_statement_table_1_previous"><a href="#" aria-controls="kt_customer_view_statement_table_1" data-dt-idx="0" tabindex="0" class="page-link"><i class="previous"></i></a></li><li class="paginate_button page-item active"><a href="#" aria-controls="kt_customer_view_statement_table_1" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="kt_customer_view_statement_table_1" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item next" id="kt_customer_view_statement_table_1_next"><a href="#" aria-controls="kt_customer_view_statement_table_1" data-dt-idx="3" tabindex="0" class="page-link"><i class="next"></i></a></li></ul></div></div></div>
-                                </div>
-                                <!--end::Table-->
-                            </div>
-                            <!--end::Tab panel-->
-                            <!--begin::Tab panel-->
-                            <div id="kt_customer_view_statement_2" class="py-0 tab-pane fade" role="tabpanel">
-                                <!--begin::Table-->
-                                <div id="kt_customer_view_statement_table_2_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                    <div class="table-responsive">
-                                        <table id="kt_customer_view_statement_table_2" class="table align-middle table-row-dashed fs-6 text-gray-600 fw-bold gy-4 dataTable no-footer">
-                                            <!--begin::Table head-->
-                                            <thead class="border-bottom border-gray-200">
-                                                <!--begin::Table row-->
-                                                <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0"><th class="w-125px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_2" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 125px;">Date</th><th class="w-100px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_2" rowspan="1" colspan="1" aria-label="Order ID: activate to sort column ascending" style="width: 100px;">Order ID</th><th class="w-300px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_2" rowspan="1" colspan="1" aria-label="Details: activate to sort column ascending" style="width: 300px;">Details</th><th class="w-100px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_2" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 100px;">Amount</th><th class="w-100px text-end pe-7 sorting_disabled" rowspan="1" colspan="1" aria-label="Invoice" style="width: 100px;">Invoice</th></tr>
-                                                <!--end::Table row-->
-                                            </thead>
-                                            <!--end::Table head-->
-                                            <!--begin::Table body-->
-                                            <tbody>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                <tr class="odd">
-                                                    <td data-order="2020-01-30T00:00:00+03:00">May 30, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">523445943</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-1.30</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2020-01-22T00:00:00+03:00">Apr 22, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">231445943</a>
-                                                    </td>
-                                                    <td>Parcel Shipping / Delivery Service App</td>
-                                                    <td class="text-success">$204.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2020-01-09T00:00:00+03:00">Feb 09, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">426445943</a>
-                                                    </td>
-                                                    <td>Visual Design Illustration</td>
-                                                    <td class="text-success">$31.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2020-01-01T00:00:00+03:00">Nov 01, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">984445943</a>
-                                                    </td>
-                                                    <td>Abstract Vusial Pack</td>
-                                                    <td class="text-success">$52.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2020-01-04T00:00:00+03:00">Jan 04, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">324442313</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-0.80</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2020-01-01T00:00:00+03:00">Nov 01, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td>Darknight transparency 36 Icons Pack</td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2020-01-24T00:00:00+03:00">Oct 24, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">423445721</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-2.60</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2020-01-08T00:00:00+03:00">Oct 08, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td>Cartoon Mobile Emoji Phone Pack</td>
-                                                    <td class="text-success">$76.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2020-01-15T00:00:00+03:00">Sep 15, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td>Iphone 12 Pro Mockup Mega Bundle</td>
-                                                    <td class="text-success">$5.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2020-01-30T00:00:00+03:00">May 30, 2020</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">523445943</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-1.30</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <!--end::Table body-->
-                                        </table>
-                                    </div><div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"><div class="dataTables_paginate paging_simple_numbers" id="kt_customer_view_statement_table_2_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="kt_customer_view_statement_table_2_previous"><a href="#" aria-controls="kt_customer_view_statement_table_2" data-dt-idx="0" tabindex="0" class="page-link"><i class="previous"></i></a></li><li class="paginate_button page-item active"><a href="#" aria-controls="kt_customer_view_statement_table_2" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="kt_customer_view_statement_table_2" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item next" id="kt_customer_view_statement_table_2_next"><a href="#" aria-controls="kt_customer_view_statement_table_2" data-dt-idx="3" tabindex="0" class="page-link"><i class="next"></i></a></li></ul></div></div></div>
-                                </div>
-                                <!--end::Table-->
-                            </div>
-                            <!--end::Tab panel-->
-                            <!--begin::Tab panel-->
-                            <div id="kt_customer_view_statement_3" class="py-0 tab-pane fade" role="tabpanel">
-                                <!--begin::Table-->
-                                <div id="kt_customer_view_statement_table_3_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                    <div class="table-responsive">
-                                        <table id="kt_customer_view_statement_table_3" class="table align-middle table-row-dashed fs-6 text-gray-600 fw-bold gy-4 dataTable no-footer">
-                                            <!--begin::Table head-->
-                                            <thead class="border-bottom border-gray-200">
-                                                <!--begin::Table row-->
-                                                <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0"><th class="w-125px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_3" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 125px;">Date</th><th class="w-100px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_3" rowspan="1" colspan="1" aria-label="Order ID: activate to sort column ascending" style="width: 100px;">Order ID</th><th class="w-300px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_3" rowspan="1" colspan="1" aria-label="Details: activate to sort column ascending" style="width: 300px;">Details</th><th class="w-100px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_3" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 100px;">Amount</th><th class="w-100px text-end pe-7 sorting_disabled" rowspan="1" colspan="1" aria-label="Invoice" style="width: 100px;">Invoice</th></tr>
-                                                <!--end::Table row-->
-                                            </thead>
-                                            <!--end::Table head-->
-                                            <!--begin::Table body-->
-                                            <tbody>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                <tr class="odd">
-                                                    <td data-order="2019-01-09T00:00:00+03:00">Feb 09, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">426445943</a>
-                                                    </td>
-                                                    <td>Visual Design Illustration</td>
-                                                    <td class="text-success">$31.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2019-01-01T00:00:00+03:00">Nov 01, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">984445943</a>
-                                                    </td>
-                                                    <td>Abstract Vusial Pack</td>
-                                                    <td class="text-success">$52.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2019-01-04T00:00:00+03:00">Jan 04, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">324442313</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-0.80</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2019-01-15T00:00:00+03:00">Sep 15, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td>Iphone 12 Pro Mockup Mega Bundle</td>
-                                                    <td class="text-success">$5.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2019-01-01T00:00:00+03:00">Nov 01, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td>Darknight transparency 36 Icons Pack</td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2019-01-24T00:00:00+03:00">Oct 24, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">423445721</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-2.60</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2019-01-08T00:00:00+03:00">Oct 08, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td>Cartoon Mobile Emoji Phone Pack</td>
-                                                    <td class="text-success">$76.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2019-01-30T00:00:00+03:00">May 30, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">523445943</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-1.30</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2019-01-22T00:00:00+03:00">Apr 22, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">231445943</a>
-                                                    </td>
-                                                    <td>Parcel Shipping / Delivery Service App</td>
-                                                    <td class="text-success">$204.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2019-01-09T00:00:00+03:00">Feb 09, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">426445943</a>
-                                                    </td>
-                                                    <td>Visual Design Illustration</td>
-                                                    <td class="text-success">$31.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <!--end::Table body-->
-                                        </table>
-                                    </div><div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"><div class="dataTables_paginate paging_simple_numbers" id="kt_customer_view_statement_table_3_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="kt_customer_view_statement_table_3_previous"><a href="#" aria-controls="kt_customer_view_statement_table_3" data-dt-idx="0" tabindex="0" class="page-link"><i class="previous"></i></a></li><li class="paginate_button page-item active"><a href="#" aria-controls="kt_customer_view_statement_table_3" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="kt_customer_view_statement_table_3" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item next" id="kt_customer_view_statement_table_3_next"><a href="#" aria-controls="kt_customer_view_statement_table_3" data-dt-idx="3" tabindex="0" class="page-link"><i class="next"></i></a></li></ul></div></div></div>
-                                </div>
-                                <!--end::Table-->
-                            </div>
-                            <!--end::Tab panel-->
-                            <!--begin::Tab panel-->
-                            <div id="kt_customer_view_statement_4" class="py-0 tab-pane fade" role="tabpanel">
-                                <!--begin::Table-->
-                                <div id="kt_customer_view_statement_table_4_wrapper" class="dataTables_wrapper dt-bootstrap4 no-footer">
-                                    <div class="table-responsive">
-                                        <table id="kt_customer_view_statement_table_4" class="table align-middle table-row-dashed fs-6 text-gray-600 fw-bold gy-4 dataTable no-footer">
-                                            <!--begin::Table head-->
-                                            <thead class="border-bottom border-gray-200">
-                                                <!--begin::Table row-->
-                                                <tr class="text-start text-muted fw-bolder fs-7 text-uppercase gs-0"><th class="w-125px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_4" rowspan="1" colspan="1" aria-label="Date: activate to sort column ascending" style="width: 125px;">Date</th><th class="w-100px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_4" rowspan="1" colspan="1" aria-label="Order ID: activate to sort column ascending" style="width: 100px;">Order ID</th><th class="w-300px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_4" rowspan="1" colspan="1" aria-label="Details: activate to sort column ascending" style="width: 300px;">Details</th><th class="w-100px sorting" tabindex="0" aria-controls="kt_customer_view_statement_table_4" rowspan="1" colspan="1" aria-label="Amount: activate to sort column ascending" style="width: 100px;">Amount</th><th class="w-100px text-end pe-7 sorting_disabled" rowspan="1" colspan="1" aria-label="Invoice" style="width: 100px;">Invoice</th></tr>
-                                                <!--end::Table row-->
-                                            </thead>
-                                            <!--end::Table head-->
-                                            <!--begin::Table body-->
-                                            <tbody>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                <tr class="odd">
-                                                    <td data-order="2018-01-01T00:00:00+03:00">Nov 01, 2018</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td>Darknight transparency 36 Icons Pack</td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2018-01-24T00:00:00+03:00">Oct 24, 2018</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">423445721</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-2.60</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2018-01-01T00:00:00+03:00">Nov 01, 2018</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">102445788</a>
-                                                    </td>
-                                                    <td>Darknight transparency 36 Icons Pack</td>
-                                                    <td class="text-success">$38.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2018-01-24T00:00:00+03:00">Oct 24, 2018</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">423445721</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-2.60</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2018-01-09T00:00:00+03:00">Feb 09, 2018</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">426445943</a>
-                                                    </td>
-                                                    <td>Visual Design Illustration</td>
-                                                    <td class="text-success">$31.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2018-01-01T00:00:00+03:00">Nov 01, 2018</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">984445943</a>
-                                                    </td>
-                                                    <td>Abstract Vusial Pack</td>
-                                                    <td class="text-success">$52.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2018-01-04T00:00:00+03:00">Jan 04, 2018</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">324442313</a>
-                                                    </td>
-                                                    <td>Seller Fee</td>
-                                                    <td class="text-danger">$-0.80</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2018-01-08T00:00:00+03:00">Oct 08, 2018</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td>Cartoon Mobile Emoji Phone Pack</td>
-                                                    <td class="text-success">$76.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="odd">
-                                                    <td data-order="2018-01-08T00:00:00+03:00">Oct 08, 2018</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">312445984</a>
-                                                    </td>
-                                                    <td>Cartoon Mobile Emoji Phone Pack</td>
-                                                    <td class="text-success">$76.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                                <tr class="even">
-                                                    <td data-order="2019-01-09T00:00:00+03:00">Feb 09, 2019</td>
-                                                    <td>
-                                                        <a href="#" class="text-gray-600 text-hover-primary">426445943</a>
-                                                    </td>
-                                                    <td>Visual Design Illustration</td>
-                                                    <td class="text-success">$31.00</td>
-                                                    <td class="text-end">
-                                                        <button class="btn btn-sm btn-light btn-active-light-primary">Download</button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                            <!--end::Table body-->
-                                        </table>
-                                    </div><div class="row"><div class="col-sm-12 col-md-5 d-flex align-items-center justify-content-center justify-content-md-start"></div><div class="col-sm-12 col-md-7 d-flex align-items-center justify-content-center justify-content-md-end"><div class="dataTables_paginate paging_simple_numbers" id="kt_customer_view_statement_table_4_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="kt_customer_view_statement_table_4_previous"><a href="#" aria-controls="kt_customer_view_statement_table_4" data-dt-idx="0" tabindex="0" class="page-link"><i class="previous"></i></a></li><li class="paginate_button page-item active"><a href="#" aria-controls="kt_customer_view_statement_table_4" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="kt_customer_view_statement_table_4" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item next" id="kt_customer_view_statement_table_4_next"><a href="#" aria-controls="kt_customer_view_statement_table_4" data-dt-idx="3" tabindex="0" class="page-link"><i class="next"></i></a></li></ul></div></div></div>
-                                </div>
-                                <!--end::Table-->
-                            </div>
-                            <!--end::Tab panel-->
-                        </div>
-                        <!--end::Tab Content-->
-                    </div>
-                    <!--end::Card body-->
                 </div>
                 <!--end::Statements-->
             </div>
@@ -1279,3 +323,51 @@
     </div>
     <!--end::Content-->
 </div>
+@Html.AntiForgeryToken()
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+
+            $('body').delegate('.js-renew', 'click', function () {
+
+                let SubscriberId = $(this).data('id');
+
+                bootbox.confirm({
+                    title: 'Renew Subscription',
+                    message: 'Are You Sure You Want To do This ?',
+                    buttons: {
+                        confirm: {
+                            label: 'Yes',
+                            className: 'btn-primary'
+                        },
+                        cancel: {
+                            label: 'No',
+                            className: 'btn-secondary'
+                        }
+                    },
+                    callback: function (result) {
+
+                        if (result) {
+                            $.ajax({
+                                url: "/Subscribers/RenewSubscription",
+                                data: {
+                                    id: SubscriberId,
+                                    '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                                },
+                                type: "POST",
+                                success: function (subscriptionRow) {
+
+                                    $('#Subscriptiontb').append(subscriptionRow);
+                                },
+                                error: function () {
+                                    showErrorMessage();
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

@@ -14,7 +14,7 @@ namespace Liberia.Data
         {
             //ManyTo many Relation Between Categories & Books.
             builder.Entity<BookCategory>().HasKey(e => new { e.BookId, e.CategoryId });
-            
+
             base.OnModelCreating(builder);
         }
 

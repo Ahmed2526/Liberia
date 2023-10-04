@@ -19,7 +19,7 @@
                     </div>
                     <!--end::Avatar-->
                     <!--begin::Name-->
-                    <a class="fs-3 text-gray-800 text-hover-primary fw-bolder mb-1">@Model.FirstName @Model.LastName</a>
+                    <a class="fs-3 text-gray-800 fw-bolder mb-1">@Model.FirstName @Model.LastName</a>
                     <!--end::Name-->
                     <!--begin::Position-->
                     <div class="fs-7 mt-2 badge badge-light-@(Model.IsBlocked ? "danger":"success") d-inline">@(Model.IsBlocked ? "Blocked Subscriber" : "Active Subscriber")</div>
@@ -95,7 +95,7 @@
             <!--end:::Tab item-->
             <!--begin:::Tab item-->
             <li class="nav-item">
-                <a class="nav-link text-active-primary pb-4" data-kt-countup-tabs="true" data-bs-toggle="tab" href="#kt_customer_view_overview_statements">Statements</a>
+                <a class="nav-link text-active-primary pb-4" data-kt-countup-tabs="true" data-bs-toggle="tab" href="#kt_customer_view_overview_statements">Rentals</a>
             </li>
             <!--end:::Tab item-->
             <!--begin:::Tab item-->
@@ -201,7 +201,7 @@
                                                             }
                                                             else
                                                             {
-                                                                if (!(item.StartDate > DateTime.Today.AddYears(1)))
+                                                                if (!(item.StartDate > DateTime.Today))
                                                                 {
                                                                     <span class="badge badge-light-@(DateTime.Today < item.EndDate ? "success" : "danger")">
                                                                         @(DateTime.Today < item.EndDate ? "Active" : "Expired")

@@ -1,17 +1,12 @@
 ﻿using DAL.Models.BaseModels;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL.Models
 {
     [Index(nameof(Email), IsUnique = true)]
     [Index(nameof(NationalId), IsUnique = true)]
     [Index(nameof(PhoneNumber), IsUnique = true)]
-    public class Subscriber :BaseEntity
+    public class Subscriber : BaseEntity
     {
         public string Id { get; set; } = Guid.NewGuid().ToString();
 

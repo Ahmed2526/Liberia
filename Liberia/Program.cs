@@ -12,110 +12,110 @@ using System.Reflection;
 
 namespace Liberia
 {
-	public class Program
-	{
-		public static async Task Main(string[] args)
-		{
-			var builder = WebApplication.CreateBuilder(args);
+    public class Program
+    {
+        public static async Task Main(string[] args)
+        {
+            var builder = WebApplication.CreateBuilder(args);
 
-			// Add services to the container.
-			var connectionString = builder.Configuration.GetConnectionString("NewConn") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-			builder.Services.AddDbContext<ApplicationDbContext>(options =>
-				options.UseSqlServer(connectionString));
+            // Add services to the container.
+            var connectionString = builder.Configuration.GetConnectionString("NewConn") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(connectionString));
 
-			builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-			builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
-				.AddEntityFrameworkStores<ApplicationDbContext>()
-				.AddDefaultUI().AddDefaultTokenProviders();
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultUI().AddDefaultTokenProviders();
 
-			//Configure Lockout
-			builder.Services.Configure<IdentityOptions>(options =>
-			{
-				// Default Lockout settings.
-				options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-				options.Lockout.MaxFailedAccessAttempts = 5;
-				options.Lockout.AllowedForNewUsers = true;
-			});
+            //Configure Lockout
+            builder.Services.Configure<IdentityOptions>(options =>
+            {
+                // Default Lockout settings.
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.AllowedForNewUsers = true;
+            });
 
-			//Cookie Configuration
-			builder.Services.ConfigureApplicationCookie(options =>
-			{
-				options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-				options.Cookie.Name = "LiberiaCookies";
-				options.Cookie.HttpOnly = true;
-				options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-				options.LoginPath = "/Identity/Account/Login";
-				// ReturnUrlParameter requires 
-				//using Microsoft.AspNetCore.Authentication.Cookies;
-				options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-				options.SlidingExpiration = true;
-			});
+            //Cookie Configuration
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Identity/Account/AccessDenied";
+                options.Cookie.Name = "LiberiaCookies";
+                options.Cookie.HttpOnly = true;
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.LoginPath = "/Identity/Account/Login";
+                // ReturnUrlParameter requires 
+                //using Microsoft.AspNetCore.Authentication.Cookies;
+                options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+                options.SlidingExpiration = true;
+            });
 
-			builder.Services.Configure<SecurityStampValidatorOptions>(opt =>
-			opt.ValidationInterval = TimeSpan.Zero);
+            builder.Services.Configure<SecurityStampValidatorOptions>(opt =>
+            opt.ValidationInterval = TimeSpan.Zero);
 
-			builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
+            builder.Services.Configure<MailSettings>(builder.Configuration.GetSection(nameof(MailSettings)));
 
-			builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
+            builder.Services.AddAutoMapper(Assembly.GetAssembly(typeof(AutoMapperProfile)));
 
-			//Custom Services
-			builder.Services.AddTransient(typeof(IImageService), typeof(ImageService));
-			builder.Services.AddTransient(typeof(IEmailSender), typeof(EmailSender));
-			builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
+            //Custom Services
+            builder.Services.AddTransient(typeof(IImageService), typeof(ImageService));
+            builder.Services.AddTransient(typeof(IEmailSender), typeof(EmailSender));
+            builder.Services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
 
-			builder.Services.AddControllersWithViews();
-
-
-			var configuration = builder.Configuration;
-
-			builder.Services.AddAuthentication()
-				.AddGoogle(googleOptions =>
-				{
-					googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-					googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-				});
+            builder.Services.AddControllersWithViews();
 
 
-			var app = builder.Build();
+            var configuration = builder.Configuration;
 
-			// Configure the HTTP request pipeline.
-			if (app.Environment.IsDevelopment())
-			{
-				app.UseMigrationsEndPoint();
-			}
-			else
-			{
-				app.UseExceptionHandler("/Home/Error");
-				// The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-				app.UseHsts();
-			}
+            builder.Services.AddAuthentication()
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+                    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+                });
 
-			app.UseHttpsRedirection();
-			app.UseStaticFiles();
 
-			app.UseRouting();
+            var app = builder.Build();
 
-			app.UseAuthentication();
-			app.UseAuthorization();
+            // Configure the HTTP request pipeline.
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseMigrationsEndPoint();
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
 
-			//Seed Roles And Admin Users.
-			var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
-			using var scope = scopeFactory.CreateScope();
-			var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-			var UserManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-			await DefaultRoles.SeedRoles(roleManager);
-			await DefaultUsers.SeedAdminUser(UserManager);
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
-			app.MapControllerRoute
-				(
-				name: "default",
-				pattern: "{controller=Home}/{action=Index}/{id?}"
-				);
+            app.UseRouting();
 
-			app.MapRazorPages();
+            app.UseAuthentication();
+            app.UseAuthorization();
 
-			app.Run();
-		}
-	}
+            //Seed Roles And Admin Users.
+            var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+            using var scope = scopeFactory.CreateScope();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var UserManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            await DefaultRoles.SeedRoles(roleManager);
+            await DefaultUsers.SeedAdminUser(UserManager);
+
+            app.MapControllerRoute
+                (
+                name: "default",
+                pattern: "{controller=Home}/{action=Index}/{id?}"
+                );
+
+            app.MapRazorPages();
+
+            app.Run();
+        }
+    }
 }
